@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - namespace.yaml
+  - database.yaml
+  - zipkin.yaml
+  - ms-configuration.yaml
+  - ms-authentication.yaml
+  - ms-universe.yaml
+  - ms-buyback.yaml
+  - ms-appraisal.yaml

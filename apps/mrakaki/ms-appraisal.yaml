@@ -1,0 +1,125 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appraisal-backend
+  namespace: mrakaki
+  labels:
+    app: appraisal-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: appraisal-backend
+  template:
+    metadata:
+      labels:
+        app: appraisal-backend
+    spec:
+      containers:
+      - name: appraisal-backend
+        image: mrakaki/dev-containers:mrakaki-eve-appraisal-back.0.0.1
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: production
+        - name: SPRING_CONFIG_IMPORT
+          value: configserver:http://configuration:8888
+        ports:
+          - name: http
+            containerPort: 8080
+        resources:
+          requests:
+            memory: "300Mi"
+            cpu: "300m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 2022
+          failureThreshold: 5
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 2022
+          failureThreshold: 5
+          initialDelaySeconds: 30
+          periodSeconds: 30
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: appraisal-backend
+  namespace: mrakaki
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8080
+    name: http
+  selector:
+    app: appraisal-backend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appraisal-frontend
+  namespace: mrakaki
+  labels:
+    app: appraisal-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: appraisal-frontend
+  template:
+    metadata:
+      labels:
+        app: appraisal-frontend
+    spec:
+      containers:
+      - name: appraisal-frontend
+        image: mrakaki/dev-containers:mrakaki-eve-appraisal-front.0.0.1
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: production
+        - name: SPRING_CONFIG_IMPORT
+          value: configserver:http://configuration:8888
+        ports:
+          - name: http
+            containerPort: 8080
+        resources:
+          requests:
+            memory: "300Mi"
+            cpu: "300m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 2022
+          failureThreshold: 5
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 2022
+          failureThreshold: 5
+          initialDelaySeconds: 30
+          periodSeconds: 30
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: appraisal-frontend
+  namespace: mrakaki
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8080
+    name: http
+  selector:
+    app: appraisal-frontend
