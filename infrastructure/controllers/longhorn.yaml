@@ -24,5 +24,7 @@ spec:
       defaultClass: false
       defaultFsType: ext4
       defaultClassReplicaCount: 2
+      defaultDataLocality: best-effort
+      reclaimPolicy: Retain
     defaultSettings:
       defaultDataPath: /mnt/nvme0
