@@ -1,0 +1,18 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: nginx-ingress
+  namespace: nginx-ingress
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: nginx-ingress
+    namespace: nginx-ingress
+  interval: 10m
+  values:
+    controller:
+      replicaCount: 2
+      enableCustomResources: true
+      enableCertManager: true
+      service:
+        loadBalancerIP: 10.1.1.1
