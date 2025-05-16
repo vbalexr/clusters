@@ -1,0 +1,136 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tunnels
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloud-a
+  namespace: tunnels
+  labels:
+    app: cloud-a
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloud-a
+  template:
+    metadata:
+      labels:
+        app: cloud-a
+    spec:
+      containers:
+      - name: cloud-a
+        image: fosrl/newt
+        env:
+        - name: PANGOLIN_ENDPOINT
+          valueFrom:
+            secretKeyRef:
+              name: pangolin-secret-a
+              key: newt-endpoint
+        - name: NEWT_ID
+          valueFrom:
+            secretKeyRef:
+              name: pangolin-secret-a
+              key: newt-id
+        - name: NEWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: pangolin-secret-a
+              key: newt-secret
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "200m"
+          limits:
+            memory: "200Mi"
+            cpu: "300m"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloud-b
+  namespace: tunnels
+  labels:
+    app: cloud-b
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloud-b
+  template:
+    metadata:
+      labels:
+        app: cloud-b
+    spec:
+      containers:
+      - name: cloud-b
+        image: fosrl/newt
+        env:
+        - name: PANGOLIN_ENDPOINT
+          valueFrom:
+            secretKeyRef:
+              name: pangolin-secret-b
+              key: newt-endpoint
+        - name: NEWT_ID
+          valueFrom:
+            secretKeyRef:
+              name: pangolin-secret-b
+              key: newt-id
+        - name: NEWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: pangolin-secret-b
+              key: newt-secret
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "200m"
+          limits:
+            memory: "200Mi"
+            cpu: "300m"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloud-c
+  namespace: tunnels
+  labels:
+    app: cloud-c
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloud-c
+  template:
+    metadata:
+      labels:
+        app: cloud-c
+    spec:
+      containers:
+      - name: cloud-c
+        image: fosrl/newt
+        env:
+        - name: PANGOLIN_ENDPOINT
+          valueFrom:
+            secretKeyRef:
+              name: pangolin-secret-c
+              key: newt-endpoint
+        - name: NEWT_ID
+          valueFrom:
+            secretKeyRef:
+              name: pangolin-secret-c
+              key: newt-id
+        - name: NEWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: pangolin-secret-c
+              key: newt-secret
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "200m"
+          limits:
+            memory: "200Mi"
+            cpu: "300m"
