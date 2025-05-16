@@ -5,3 +5,5 @@ resources:
   - nginx-ingress.yaml
   - jetstack.yaml
   - longhorn.yaml
+  - grafana.yaml
+  - prometheus-community.yaml
