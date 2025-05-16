@@ -1,15 +1,4 @@
 apiVersion: metallb.io/v1beta1
-kind: IPAddressPool
-metadata:
-  name: metallb-pool
-  namespace: metallb-system
-spec:
-  addresses:
-  - 10.1.0.128/25
-  - 10.1.1.0/24
-  - 10.1.2.0/24
----
-apiVersion: metallb.io/v1beta1
 kind: BGPAdvertisement
 metadata:
   name: metallb-advertisment
@@ -25,19 +14,20 @@ spec:
 apiVersion: metallb.io/v1beta2
 kind: BGPPeer
 metadata:
-  name: bgppeer-router-a
+  name: bgppeer-router-10-1-0-2
   namespace: metallb-system
 spec:
   myASN: 64500
   peerASN: 64501
   peerAddress: 10.1.0.2
 ---
-apiVersion: metallb.io/v1beta2
-kind: BGPPeer
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
 metadata:
-  name: bgppeer-router-b
+  name: metallb-pool
   namespace: metallb-system
 spec:
-  myASN: 64500
-  peerASN: 64501
-  peerAddress: 10.1.0.3
+  addresses:
+  - 10.1.0.128/25
+  - 10.1.1.0/24
+  - 10.1.2.0/24
