@@ -9,7 +9,7 @@ spec:
   ports:
   - port: 3306
     name: mariadb
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: database
 ---
