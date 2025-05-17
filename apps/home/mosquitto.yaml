@@ -1,0 +1,90 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mosquitto-config
+  namespace: home
+data: 
+  mosquitto.conf: |  
+    persistence true
+    persistence_location /mosquitto/data/
+    log_dest stdout
+    listener 1883
+    listener 9090
+    protocol websockets
+    allow_anonymous true
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mosquitto
+  namespace: home
+spec:
+  storageClassName: longhorn
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mosquitto
+  namespace: home
+  labels:
+    app: mosquitto
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mosquitto
+  template:
+    metadata:
+      labels:
+        app: mosquitto
+    spec:
+      containers:
+      - name: mosquitto
+        image: eclipse-mosquitto:latest
+        ports:
+          - name: mqtt
+            containerPort: 1883
+          - name: mqtt-ws
+            containerPort: 8001
+        volumeMounts:
+          - name: config
+            mountPath: /mosquitto/config
+          - mountPath: /mosquitto
+            name: data
+        resources:
+          requests:
+            cpu: 10m
+            memory: 32Mi
+          limits:
+            cpu: 50m
+            memory: 64Mi
+      volumes:
+        - name: config
+          configMap:
+            name: mosquitto-config
+            defaultMode: 420
+        - name: data
+          persistentVolumeClaim:
+            claimName: mosquitto
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mqtt
+  namespace: home
+spec:
+  type: ClusterIP
+  ports:
+  - port: 1883
+    protocol: TCP
+    name: mqtt
+  - port: 8001
+    protocol: TCP
+    name: mqtt-ws
+  selector:
+    app: mosquitto

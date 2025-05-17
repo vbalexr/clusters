@@ -1,0 +1,174 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: frigate
+  namespace: home
+spec:
+  interval: 10m
+  chart:
+    spec:
+      chart: frigate 
+      sourceRef:
+        kind: HelmRepository
+        name: blakeblackshear
+        namespace: flux-system
+      interval: 10m
+  values:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: feature.node.kubernetes.io/coral-tpu.installed
+                  operator: In
+                  values:
+                    - "true"
+    coral:
+      enabled: true
+      hostPath: /dev/apex_0
+    persistence:
+      config:
+        enabled: true
+        size: 1Gi
+        ephemeralWritableConfigYaml: true
+      media:
+        enabled: true
+        size: 256Gi
+    config: |
+      mqtt:
+        host: mqtt
+        port: 1883
+        user: frigate
+        password: notasecretnotused
+        
+      proxy:
+        header_map:
+          user: x-forwarded-user
+      auth:
+        trusted_proxies:
+          - 10.42.0.0/16
+          - 10.43.0.0/16
+      detectors:
+        coral:
+          type: edgetpu
+          device: pci
+      record:
+        enabled: True
+        retain:
+          days: 7
+          mode: active_objects
+      detect:
+        width: 352
+        height: 288
+        fps: 5
+        enabled: true
+      snapshots:
+        enabled: True
+        retain:
+          default: 30
+      
+      go2rtc:
+        streams:
+          yard_south:
+            - rtsp://watcher:WatchWourStep5@172.16.25.11:554/ch01
+          yard_north:
+            - rtsp://watcher:WatchWourStep5@172.16.25.12:554/ch01
+          front_south:
+            - rtsp://watcher:WatchWourStep5@172.16.25.13:554/ch01
+          front_north:
+            - rtsp://watcher:WatchWourStep5@172.16.25.14:554/ch01
+          entry_south:
+            - rtsp://watcher:WatchWourStep5@172.16.25.15:554/ch01
+          entry_north:
+            - rtsp://watcher:WatchWourStep5@172.16.25.16:554/ch01
+          garage:
+            - rtsp://watcher:WatchWourStep5@172.16.25.17:554/ch01
+          living_room:
+            - rtsp://watcher:WatchWourStep5@172.16.25.18:554/ch01
+          saul:
+            - ffmpeg:rtsp://watcher:123456@172.16.25.10:8554/profile0#video=copy#audio=copy#audio=aac
+      cameras:
+        yard_south:
+          ffmpeg:
+            inputs:
+              - path: rtsp://watcher:WatchWourStep5@172.16.25.11:554/ch01
+                roles:
+                  - record
+              - path: rtsp://watcher:WatchWourStep5@172.16.25.11:554/ch01_sub
+                roles:
+                  - detect
+        yard_north:
+          ffmpeg:
+            inputs:
+              - path: rtsp://watcher:WatchWourStep5@172.16.25.12:554/ch01
+                roles:
+                  - record
+              - path: rtsp://watcher:WatchWourStep5@172.16.25.12:554/ch01_sub
+                roles:
+                  - detect
+        front_south:
+          ffmpeg:
+            inputs:
+              - path: rtsp://watcher:WatchWourStep5@172.16.25.13:554/ch01
+                roles:
+                  - record
+              - path: rtsp://watcher:WatchWourStep5@172.16.25.13:554/ch01_sub
+                roles:
+                  - detect
+        front_north:
+          ffmpeg:
+            inputs:
+              - path: rtsp://watcher:WatchWourStep5@172.16.25.14:554/ch01
+                roles:
+                  - record
+              - path: rtsp://watcher:WatchWourStep5@172.16.25.14:554/ch01_sub
+                roles:
+                  - detect
+        entry_south:
+          ffmpeg:
+            inputs:
+              - path: rtsp://watcher:WatchWourStep5@172.16.25.15:554/ch01
+                roles:
+                  - record
+              - path: rtsp://watcher:WatchWourStep5@172.16.25.15:554/ch01_sub
+                roles:
+                  - detect
+        entry_north:
+          ffmpeg:
+            inputs:
+              - path: rtsp://watcher:WatchWourStep5@172.16.25.16:554/ch01
+                roles:
+                  - record
+              - path: rtsp://watcher:WatchWourStep5@172.16.25.16:554/ch01_sub
+                roles:
+                  - detect
+        garage:
+          ffmpeg:
+            inputs:
+              - path: rtsp://watcher:WatchWourStep5@172.16.25.17:554/ch01
+                roles:
+                  - record
+              - path: rtsp://watcher:WatchWourStep5@172.16.25.17:554/ch01_sub
+                roles:
+                  - detect
+        living_room:
+          ffmpeg:
+            inputs:
+              - path: rtsp://watcher:WatchWourStep5@172.16.25.18:554/ch01
+                roles:
+                  - record
+              - path: rtsp://watcher:WatchWourStep5@172.16.25.18:554/ch01_sub
+                roles:
+                  - detect
+        saul:
+          ffmpeg:
+            inputs:
+              - path: rtsp://watcher:123456@172.16.25.10:8554/profile0
+                roles:
+                  - record
+              - path: rtsp://watcher:123456@172.16.25.10:8554/profile1
+                roles:
+                  - detect
+          detect:
+            width: 352
+            height: 240

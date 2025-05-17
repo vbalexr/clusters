@@ -8,3 +8,5 @@ resources:
   - grafana.yaml
   - prometheus-community.yaml
   - nfd.yaml
+  - blakeblackshear.yaml
+  - zigbee2mqtt.yaml

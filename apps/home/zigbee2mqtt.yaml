@@ -1,0 +1,31 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: zigbee2mqtt
+  namespace: home
+spec:
+  interval: 10m
+  chart:
+    spec:
+      chart: zigbee2mqtt
+      version: '2.3.0'
+      sourceRef:
+        kind: HelmRepository
+        name: zigbee2mqtt
+        namespace: flux-system
+      interval: 10m
+  values:
+    service:
+      type: ClusterIP
+    zigbee2mqtt:
+      mqtt:
+        server: mqtt://mqtt:1883
+        user: zigbee2mqtt
+        password: notasecretnotused
+      serial:
+        port: tcp://172.16.20.10:6638
+        baudrate: 115200
+        adapter: ember
+        rtscts: false
+      advanced:
+        transmit_power: 20
