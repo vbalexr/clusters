@@ -6,24 +6,7 @@ metadata:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: production-home
-  namespace: flux-system
-spec:
-  dependsOn:
-    - name: infra-monitoring
-  interval: 1h
-  retryInterval: 1m
-  timeout: 5m
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-  path: ./apps/home
-  prune: true
----
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: home-immich
+  name: home-postgres
   namespace: home
 spec:
   dependsOn:
@@ -37,5 +20,129 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
+  path: ./apps/postgres
+  prune: true
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: home-redis
+  namespace: home
+spec:
+  dependsOn:
+    - name: infra-monitoring
+      namespace: flux-system
+  interval: 1h
+  retryInterval: 1m
+  timeout: 5m
+  targetNamespace: home
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  path: ./apps/redis
+  prune: true
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: home-mosquitto
+  namespace: home
+spec:
+  dependsOn:
+    - name: infra-monitoring
+      namespace: flux-system
+  interval: 1h
+  retryInterval: 1m
+  timeout: 5m
+  targetNamespace: home
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  path: ./apps/mosquitto
+  prune: true
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: home-zigbee2mqtt
+  namespace: home
+spec:
+  dependsOn:
+    - name: home-mosquitto
+      namespace: home
+  interval: 1h
+  retryInterval: 1m
+  timeout: 5m
+  targetNamespace: home
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  path: ./apps/zigbee2mqtt
+  prune: true
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: home-assistant
+  namespace: home
+spec:
+  dependsOn:
+    - name: home-postgres
+      namespace: home
+    - name: home-mosquitto
+      namespace: home
+    - name: home-zigbee2mqtt
+      namespace: home
+  interval: 1h
+  retryInterval: 1m
+  timeout: 5m
+  targetNamespace: home
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  path: ./apps/homeassistant
+  prune: true
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: home-immich
+  namespace: home
+spec:
+  dependsOn:
+    - name: home-postgres
+      namespace: home
+  interval: 1h
+  retryInterval: 1m
+  timeout: 5m
+  targetNamespace: home
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
   path: ./apps/immich
+  prune: true
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: home-frigate
+  namespace: home
+spec:
+  dependsOn:
+    - name: home-postgres
+      namespace: home
+  interval: 1h
+  retryInterval: 1m
+  timeout: 5m
+  targetNamespace: home
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  path: ./apps/frigate
   prune: true
