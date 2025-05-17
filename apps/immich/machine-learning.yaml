@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: immich-ml
+spec:
+  selector:
+    matchLabels:
+      app: immich-ml
+  serviceName: immich-ml
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: immich-ml
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: immich-ml
+        image: ghcr.io/immich-app/immich-machine-learning:v1.132.3
+        env:
+          - name: IMMICH_PORT
+            value: "3003"
+        ports:
+        - containerPort: 3003
+          name: http
+        volumeMounts:
+        - name: immich-models
+          mountPath: /cache
+  volumeClaimTemplates:
+  - metadata:
+      name:  immich-models
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "longhorn"
+      resources:
+        requests:
+          storage: 10Gi
