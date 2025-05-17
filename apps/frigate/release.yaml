@@ -11,7 +11,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: blakeblackshear
-        namespace: flux-system
+        namespace: home
       interval: 10m
   values:
     affinity:
@@ -55,7 +55,7 @@ spec:
       record:
         enabled: True
         retain:
-          days: 7
+          days: 8
           mode: active_objects
       detect:
         width: 352

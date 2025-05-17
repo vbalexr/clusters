@@ -16,8 +16,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: immich
-        image: ubuntu #ghcr.io/immich-app/immich-server:v1.132.3
-        command: ["sleep", "3600"]
+        image: ghcr.io/immich-app/immich-server:v1.132.3
         env:
           - name: TZ
             value: UTC
