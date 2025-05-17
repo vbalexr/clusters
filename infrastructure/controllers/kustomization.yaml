@@ -6,3 +6,4 @@ resources:
   - cert-manager.yaml
   - longhorn.yaml
   - pangolin.yaml
+  - node-feature-discovery.yaml

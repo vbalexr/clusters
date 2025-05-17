@@ -7,3 +7,4 @@ resources:
   - longhorn.yaml
   - grafana.yaml
   - prometheus-community.yaml
+  - nfd.yaml
