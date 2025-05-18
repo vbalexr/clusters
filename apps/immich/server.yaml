@@ -52,6 +52,13 @@ spec:
         volumeMounts:
           - mountPath: /usr/src/app/upload
             name: data
+        resources:
+          requests:
+            cpu: 2
+            memory: 8Gi
+          limits:
+            cpu: 2500m
+            memory: 8Gi
   volumeClaimTemplates:
   - metadata:
       name:  data

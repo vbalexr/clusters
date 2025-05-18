@@ -26,6 +26,13 @@ spec:
         volumeMounts:
         - name: immich-models
           mountPath: /cache
+        resources:
+          requests:
+            cpu: 750m
+            memory: 768Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
   volumeClaimTemplates:
   - metadata:
       name:  immich-models
