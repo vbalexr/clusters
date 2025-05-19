@@ -29,11 +29,14 @@ spec:
         memory: 1Gi
     ingress:
       enabled: true
-      className: nginx
+      ingressClassName: nginx
       annotations:
         nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
         nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+        kubernetes.io/tls-acme: "true"
         nginx.org/websocket-services: "frigate"
+        nginx.org/ssl-services: "frigate"
+        cert-manager.io/cluster-issuer: "letsencrypt-dns01-cloudflare"
       hosts:
         - host: cameras.vbalex.com
           paths:
