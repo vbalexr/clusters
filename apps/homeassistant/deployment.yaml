@@ -21,6 +21,8 @@ spec:
       labels:
         app: homeassistant
     spec:
+      strategy:
+        type: Recreate
       containers:
       - name: homeassistant
         image: ghcr.io/home-assistant/home-assistant:2025.5.2

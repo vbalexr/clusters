@@ -21,6 +21,8 @@ spec:
       labels:
         app: mosquitto
     spec:
+      strategy:
+        type: Recreate
       containers:
       - name: mosquitto
         image: eclipse-mosquitto:latest
