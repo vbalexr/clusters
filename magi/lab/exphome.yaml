@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: lab
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: lab-esphome
+  namespace: lab
+spec:
+  dependsOn:
+    - name: infra-monitoring
+      namespace: flux-system
+  interval: 1h
+  retryInterval: 1m
+  timeout: 5m
+  targetNamespace: lab
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  path: ./apps/esphome
+  prune: true

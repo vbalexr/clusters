@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: esphome
+  namespace: lab
+  labels:
+    app: esphome
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: esphome
+  template:
+    metadata:
+      annotations:
+        k8s.v1.cni.cncf.io/networks: |
+          [{
+            "name": "iot-lan",
+            "namespace": "kube-system"
+          }]
+      labels:
+        app: esphome
+    spec:
+      strategy:
+        type: Recreate
+      containers:
+      - name: esphome
+        image: ghcr.io/esphome/esphome
+        ports:
+          - name: http
+            containerPort: 6052
+        volumeMounts:
+          - mountPath: /config
+            name: config
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: esphome
