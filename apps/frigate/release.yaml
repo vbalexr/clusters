@@ -20,6 +20,29 @@ spec:
           "name": "cctv-lan",
           "namespace": "kube-system"
         }]
+    resources:
+      limits:
+        cpu: 1500m
+        memory: 1.5Gi
+      requests:
+        cpu: 1000m
+        memory: 1Gi
+    ingress:
+      enabled: true
+      className: nginx
+      annotations:
+        nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+        nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+        nginx.org/websocket-services: "frigate"
+      hosts:
+        - host: cameras.vbalex.com
+          paths:
+          - path: '/'
+            portName: http-auth
+      tls:
+       - secretName: tls-com-vbalex-cameras
+         hosts:
+          - cameras.vbalex.com
     affinity:
       nodeAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:
