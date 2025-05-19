@@ -12,6 +12,12 @@ spec:
       app: homeassistant
   template:
     metadata:
+      annotations:
+        k8s.v1.cni.cncf.io/networks: |
+          [{
+            "name": "home-lan",
+            "namespace": "kube-system"
+          }]
       labels:
         app: homeassistant
     spec:
