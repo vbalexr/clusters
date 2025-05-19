@@ -1,0 +1,59 @@
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: home-lan
+  namespace: kube-system
+spec:
+  config: |-
+    {
+      "cniVersion": "1.0.0",
+      "type": "macvlan",
+      "master": "vlan15",
+      "mode": "bridge",
+      "ipam": {
+        "type": "whereabouts",
+        "range": "172.16.15.48/28",
+        "gateway": "172.16.15.1",
+        "configuration_path": "/var/lib/rancher/k3s/agent/etc/cni/net.d/whereabouts.d/whereabouts.conf"
+      }
+    }
+---
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: iot-lan
+  namespace: kube-system
+spec:
+  config: |-
+    {
+      "cniVersion": "1.0.0",
+      "type": "macvlan",
+      "master": "vlan20",
+      "mode": "bridge",
+      "ipam": {
+        "type": "whereabouts",
+        "range": "172.16.20.48/28",
+        "gateway": "172.16.20.1",
+        "configuration_path": "/var/lib/rancher/k3s/agent/etc/cni/net.d/whereabouts.d/whereabouts.conf"
+      }
+    }
+---
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: cctv-lan
+  namespace: kube-system
+spec:
+  config: |-
+    {
+      "cniVersion": "1.0.0",
+      "type": "macvlan",
+      "master": "vlan25",
+      "mode": "bridge",
+      "ipam": {
+        "type": "whereabouts",
+        "range": "172.16.25.48/28",
+        "gateway": "172.16.25.1",
+        "configuration_path": "/var/lib/rancher/k3s/agent/etc/cni/net.d/whereabouts.d/whereabouts.conf"
+      }
+    }

@@ -7,3 +7,4 @@ resources:
   - longhorn.yaml
   - pangolin.yaml
   - node-feature-discovery.yaml
+  - multus.yaml

@@ -4,3 +4,4 @@ resources:
   - metallb-config.yaml
   - longhorn-config.yaml
   - cert-manager.yaml
+  - multus-nad.yaml
