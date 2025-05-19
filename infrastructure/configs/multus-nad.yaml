@@ -12,11 +12,16 @@ spec:
       "mode": "bridge",
       "ipam": {
         "type": "whereabouts",
-        "range": "172.16.15.48/28",
+        "range": "172.16.15.48/26",
+        "exclude": [
+          "172.16.15.0/27",
+          "172.16.15.32/28"
+          ],
         "gateway": "172.16.15.1",
         "configuration_path": "/var/lib/rancher/k3s/agent/etc/cni/net.d/whereabouts.d/whereabouts.conf"
       }
     }
+
 ---
 apiVersion: k8s.cni.cncf.io/v1
 kind: NetworkAttachmentDefinition
@@ -32,7 +37,11 @@ spec:
       "mode": "bridge",
       "ipam": {
         "type": "whereabouts",
-        "range": "172.16.20.48/28",
+        "range": "172.16.20.48/26",
+        "exclude": [
+          "172.16.20.0/27",
+          "172.16.20.32/28"
+          ],
         "gateway": "172.16.20.1",
         "configuration_path": "/var/lib/rancher/k3s/agent/etc/cni/net.d/whereabouts.d/whereabouts.conf"
       }
@@ -52,7 +61,11 @@ spec:
       "mode": "bridge",
       "ipam": {
         "type": "whereabouts",
-        "range": "172.16.25.48/28",
+        "range": "172.16.25.48/26",
+        "exclude": [
+          "172.16.25.0/27",
+          "172.16.25.32/28"
+          ],
         "gateway": "172.16.25.1",
         "configuration_path": "/var/lib/rancher/k3s/agent/etc/cni/net.d/whereabouts.d/whereabouts.conf"
       }
