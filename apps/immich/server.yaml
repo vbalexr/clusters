@@ -16,7 +16,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: immich
-        image: ghcr.io/immich-app/immich-server:v1.132.3
+        image: ghcr.io/immich-app/immich-server:v1.133.0
         env:
           - name: TZ
             value: UTC
@@ -45,7 +45,7 @@ spec:
           - name: MACHINE_LEARNING_PORT
             value: "3003"
           - name: MACHINE_LEARNING_HOST
-            value: immich-ml
+            value: immich-machine-learning
         ports:
           - name: http
             containerPort: 2283 
