@@ -1,0 +1,27 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: plex
+  namespace: home
+spec:
+  interval: 10m
+  chart:
+    spec:
+      chart: plex-media-server 
+      sourceRef:
+        kind: HelmRepository
+        name: plex 
+        namespace: home
+      interval: 10m
+  values:
+    ingress:
+      enabled: true
+       # note put a domain name that points to your ip address here
+      url: https://plex.vbalex.com
+      ingressClassName: nginx
+    pms:
+      configStorage: 10Gi
+    extraEnv:
+      # This claim is optional, and is only used for the first startup of PMS
+      # The claim is obtained from https://www.plex.tv/claim/ is only valid for a few minutes
+      PLEX_CLAIM: "claim"
