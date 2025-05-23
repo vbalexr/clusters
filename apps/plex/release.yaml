@@ -15,7 +15,7 @@ spec:
       interval: 10m
   values:
     ingress:
-      enabled: true
+      enabled: false
        # note put a domain name that points to your ip address here
       url: https://plex.vbalex.com
       ingressClassName: nginx
