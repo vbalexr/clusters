@@ -7,8 +7,9 @@ metadata:
     nginx.org/websocket-services: "immich"
     cert-manager.io/cluster-issuer: "letsencrypt-dns01-cloudflare"
     nginx.org/client-max-body-size: "4096m"
-    nginx.org/proxy-max-temp-file-size: "4096m"
-    nginx.org/proxy-body-size: "4096m"
+    nginx.org/proxy-read-timeout: 600s
+    nginx.org/proxy-send-timeout: 600s
+    nginx.org/proxy-connect-timeout: 600s
 
 spec:
   ingressClassName: nginx
