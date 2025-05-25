@@ -10,6 +10,12 @@ spec:
   replicas: 1
   template:
     metadata:
+      annotations:
+        k8s.v1.cni.cncf.io/networks: |
+          [{
+            "name": "home-lan",
+            "namespace": "kube-system"
+          }]
       labels:
         app: immich
     spec:

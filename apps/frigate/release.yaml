@@ -23,20 +23,16 @@ spec:
     resources:
       limits:
         cpu: 1500m
-        memory: 1.5Gi
+        memory: 2Gi
       requests:
         cpu: 1000m
-        memory: 1Gi
+        memory: 1.5Gi
     ingress:
       enabled: true
       ingressClassName: nginx
       annotations:
-        nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
-        nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
-        kubernetes.io/tls-acme: "true"
-        nginx.org/websocket-services: "frigate"
-        nginx.org/ssl-services: "frigate"
         cert-manager.io/cluster-issuer: "letsencrypt-dns01-cloudflare"
+        nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
       hosts:
         - host: cameras.vbalex.com
           paths:

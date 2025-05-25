@@ -4,4 +4,3 @@ resources:
   - server.yaml
   - machine-learning.yaml
   - services.yaml
-  - ingress.yaml
