@@ -22,7 +22,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: immich
-        image: ghcr.io/immich-app/immich-server:v1.133.0
+        image: ghcr.io/immich-app/immich-server:v1.133.1
         env:
           - name: TZ
             value: UTC

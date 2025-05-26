@@ -16,7 +16,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: immich-ml
-        image: ghcr.io/immich-app/immich-machine-learning:v1.133.0
+        image: ghcr.io/immich-app/immich-machine-learning:v1.133.1
         env:
           - name: IMMICH_PORT
             value: "3003"
