@@ -9,7 +9,8 @@ spec:
   ports:
   - port: 2283
     name: http
-  type: ClusterIP
+  type: LoadBalancer
+  loadBalancerIP: 10.1.0.202
   selector:
     app: immich
 ---
