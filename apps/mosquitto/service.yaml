@@ -4,7 +4,8 @@ metadata:
   name: mqtt
   namespace: home
 spec:
-  type: ClusterIP
+  type: LoadBalancer
+  loadBalancerIP: 10.1.0.200
   ports:
   - port: 1883
     protocol: TCP
