@@ -10,19 +10,13 @@ spec:
   replicas: 1
   template:
     metadata:
-      annotations:
-        k8s.v1.cni.cncf.io/networks: |
-          [{
-            "name": "home-lan",
-            "namespace": "kube-system"
-          }]
       labels:
         app: immich
     spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: immich
-        image: ghcr.io/immich-app/immich-server:v1.133.1
+        image: ghcr.io/immich-app/immich-server:v1.134.0
         env:
           - name: TZ
             value: UTC
