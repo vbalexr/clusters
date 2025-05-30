@@ -30,5 +30,5 @@ spec:
     loki:
       persistence:
         enabled: true
-        storageClassName: longhorn-unsafe
+        storageClassName: longhorn
         size: 5Gi

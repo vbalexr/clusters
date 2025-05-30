@@ -14,12 +14,6 @@ spec:
         namespace: home
       interval: 10m
   values:
-    podAnnotations:
-      k8s.v1.cni.cncf.io/networks: |
-        [{
-          "name": "cctv-lan",
-          "namespace": "kube-system"
-        }]
     resources:
       limits:
         cpu: 1500m
@@ -59,7 +53,9 @@ spec:
         enabled: true
         size: 1Gi
         ephemeralWritableConfigYaml: true
+        storageClass: longhorn
       media:
+        storageClass: longhorn
         enabled: true
         size: 256Gi
     config: |
