@@ -1,0 +1,125 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" version="29.2.9">
+  <diagram id="network" name="Homelab Network">
+    <mxGraphModel dx="1722" dy="988" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1080" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="pf" parent="1" style="shape=rectangle;rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;align=center;" value="pfSense&lt;br&gt;Dual WAN" vertex="1">
+          <mxGeometry height="60" width="140" x="820" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="wan1" parent="1" style="shape=ellipse;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" value="WAN1" vertex="1">
+          <mxGeometry height="40" width="80" x="730" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="wan2" parent="1" style="shape=ellipse;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" value="WAN2" vertex="1">
+          <mxGeometry height="40" width="80" x="970" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="wan1pf" edge="1" parent="1" source="wan1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;strokeColor=#9673a6;fontSize=11;" target="pf" value="failover">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="wan2pf" edge="1" parent="1" source="wan2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;strokeColor=#9673a6;fontSize=11;" target="pf" value="failover">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="coreA" parent="1" style="shape=rectangle;rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;align=center;" value="Core-A&lt;br&gt;MikroTik" vertex="1">
+          <mxGeometry height="60" width="140" x="600" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="coreB" parent="1" style="shape=rectangle;rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;align=center;" value="Core-B&lt;br&gt;MikroTik" vertex="1">
+          <mxGeometry height="60" width="140" x="1040" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="coreLink" edge="1" parent="1" source="coreA" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;strokeColor=#6c8ebf;fontSize=11;" target="coreB" value="Inter-switch&lt;br&gt;2×10G LACP">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pfCoreA" edge="1" parent="1" source="pf" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;strokeColor=#d6b656;fontSize=11;" target="coreA" value="Trunk VLANs&lt;br&gt;MLAG LACP (2.5G)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pfCoreB" edge="1" parent="1" source="pf" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;strokeColor=#d6b656;fontSize=11;" target="coreB" value="Trunk VLANs&lt;br&gt;MLAG LACP (2.5G)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="srv1" parent="1" style="shape=rectangle;rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;align=center;" value="Server-1\nMS-01" vertex="1">
+          <mxGeometry height="50" width="120" x="820" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="srv2" parent="1" style="shape=rectangle;rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;align=center;" value="Server-2\nMS-01" vertex="1">
+          <mxGeometry height="50" width="120" x="820" y="600" as="geometry" />
+        </mxCell>
+        <mxCell id="srv3" parent="1" style="shape=rectangle;rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;align=center;" value="Server-3\nMS-01" vertex="1">
+          <mxGeometry height="50" width="120" x="820" y="680" as="geometry" />
+        </mxCell>
+        <mxCell id="srv1A" edge="1" parent="1" source="srv1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;strokeColor=#82b366;fontSize=11;" target="coreA" value="10G&lt;br&gt;MLAG LACP">
+          <mxGeometry relative="1" x="-0.5821" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="srv1B" edge="1" parent="1" source="srv1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;strokeColor=#82b366;fontSize=11;" target="coreB" value="10G&lt;br&gt;MLAG LACP">
+          <mxGeometry relative="1" x="-0.5493" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="srv2A" edge="1" parent="1" source="srv2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;strokeColor=#82b366;fontSize=11;" target="coreA" value="10G&lt;br&gt;MLAG LACP">
+          <mxGeometry relative="1" x="-0.6144" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="srv2B" edge="1" parent="1" source="srv2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;strokeColor=#82b366;fontSize=11;" target="coreB" value="10G&lt;br&gt;MLAG LACP">
+          <mxGeometry relative="1" x="-0.6322" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="srv3A" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;strokeColor=#82b366;fontSize=11;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" value="10G&lt;br&gt;MLAG LACP">
+          <mxGeometry relative="1" x="-0.6596" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="670" y="705" />
+            </Array>
+            <mxPoint x="819.97" y="705" as="sourcePoint" />
+            <mxPoint x="669.9685714285715" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="srv3B" edge="1" parent="1" source="srv3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;strokeColor=#82b366;fontSize=11;" target="coreB" value="10G&lt;br&gt;MLAG LACP">
+          <mxGeometry relative="1" x="-0.6893" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="smart" parent="1" style="shape=rectangle;rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;align=center;" value="Smart Switch&lt;br&gt;(VLANs)" vertex="1">
+          <mxGeometry height="50" width="120" x="440" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="smartUplink" edge="1" parent="1" source="smart" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;strokeColor=#b85450;fontSize=11;exitX=1;exitY=0.75;exitDx=0;exitDy=0;" target="coreA" value="RSTP Trunk&lt;br&gt;VLANs 15/20/500">
+          <mxGeometry relative="1" x="-0.6117" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="smartUplinkB" edge="1" parent="1" source="smart" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;strokeColor=#b85450;fontSize=11;exitX=1;exitY=0.25;exitDx=0;exitDy=0;" target="coreB" value="RSTP Trunk&lt;br&gt;VLANs 15/20/500">
+          <mxGeometry relative="1" x="0.0111" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="poe" parent="1" style="shape=rectangle;rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;align=center;" value="PoE Switch&lt;br&gt;(CCVT)" vertex="1">
+          <mxGeometry height="50" width="120" x="1240" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="poeUplink" edge="1" parent="1" source="poe" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;strokeColor=#b85450;fontSize=11;exitX=0;exitY=0.75;exitDx=0;exitDy=0;" target="coreA" value="RSTP &lt;br&gt;Access VLAN25">
+          <mxGeometry relative="1" x="0.0193" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="poeUplinkB" edge="1" parent="1" source="poe" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;strokeColor=#b85450;fontSize=11;exitX=0;exitY=0.25;exitDx=0;exitDy=0;" target="coreB" value="RSTP&lt;br&gt;Access VLAN25">
+          <mxGeometry relative="1" x="-0.2327" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ap1" parent="1" style="shape=ellipse;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#6c8ebf;fontSize=12;" value="AP-1&lt;br&gt;(Home/IoT)" vertex="1">
+          <mxGeometry height="60" width="120" x="240" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="ap2" parent="1" style="shape=ellipse;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#6c8ebf;fontSize=12;" value="AP-2&lt;br&gt;(Home/IoT)" vertex="1">
+          <mxGeometry height="60" width="120" x="240" y="600" as="geometry" />
+        </mxCell>
+        <mxCell id="ap1Smart" edge="1" parent="1" source="ap1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;strokeColor=#b85450;fontSize=11;" target="smart" value="Trunk to Smart\nVLANs 15/20/500">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ap2Smart" edge="1" parent="1" source="ap2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;strokeColor=#b85450;fontSize=11;" target="smart" value="Trunk to Smart\nVLANs 15/20/500">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="legend" parent="1" style="shape=rectangle;rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=12;align=left;" value="VLANs:&lt;br&gt;10 LAB (dual)&lt;br&gt;15 Home (dual)&lt;br&gt;20 IOT (IPv4, no internet)&lt;br&gt;25 CCVT (IPv4, no internet)&lt;br&gt;500 Management (dual, no internet)" vertex="1">
+          <mxGeometry height="200" width="220" x="330" y="160" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
