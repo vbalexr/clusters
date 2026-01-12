@@ -5,6 +5,10 @@ resources:
   - namespace.yaml
   - secrets.yaml
   - ../../../apps/homeassistant
+  - ../../../apps/zigbee2mqtt
+
 patchesStrategicMerge:
   - patches/homeassistant-service.yaml
   - patches/homeassistant-storage.yaml
+  - patches/zigbee2mqtt-storage.yaml
+  - patches/zigbee2mqtt-service.yaml
