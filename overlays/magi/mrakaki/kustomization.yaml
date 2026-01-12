@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: mrakaki
+resources:
+  - namespace.yaml
+  - ../../../apps/mrakaki
+ 
+patchesStrategicMerge:
+  - patches/configuration-service.yaml
+  - patches/authentication-service.yaml
+  
