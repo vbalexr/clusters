@@ -6,9 +6,12 @@ resources:
   - secrets.yaml
   - ../../../apps/homeassistant
   - ../../../apps/zigbee2mqtt
+  - ../../../apps/mosquitto
 
 patchesStrategicMerge:
   - patches/homeassistant-service.yaml
   - patches/homeassistant-storage.yaml
   - patches/zigbee2mqtt-storage.yaml
   - patches/zigbee2mqtt-service.yaml
+  - patches/mosquitto-storage.yaml
+  - patches/mosquitto-service.yaml
