@@ -1,11 +1,12 @@
+
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: postgres
+  name: mysql
 spec:
   volumeClaimTemplates:
   - metadata:
-      name: postgres
+      name:  mysql-data
     spec:
       storageClassName: rook-ceph-block
       accessModes: [ "ReadWriteOnce" ]
