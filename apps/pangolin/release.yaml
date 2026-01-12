@@ -1,0 +1,27 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: newt
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: newt
+      sourceRef:
+        kind: HelmRepository
+        name: fossorial
+  install:
+    createNamespace: true
+  upgrade:
+    remediation:
+      retries: 3
+
+  # Minimal inline values to ensure something is set
+  values:
+    enabled: true
+    replicaCount: 2
+
+  valuesFrom:
+    - kind: Secret
+      name: newt-values
+      valuesKey: values.yaml
