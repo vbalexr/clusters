@@ -3,9 +3,19 @@ kind: Kustomization
 namespace: databases
 resources:
   - namespace.yaml
-  - secrets.yaml
+
+  - postgres-secrets.yaml
   - ../../../apps/postgres
+
+  - mysql-secrets.yaml
+  - ../../../apps/mysql
+
   - ../../../apps/redis
 patchesStrategicMerge:
   - patches/postgres-server.yaml
   - patches/postgres-service.yaml
+
+  - patches/mysql-server.yaml
+  - patches/mysql-service.yaml
+  
+  - patches/redis-service.yaml

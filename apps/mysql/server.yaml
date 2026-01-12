@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  serviceName: mysql
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: mariadb
+        image: mariadb
+        env:
+          - name: MARIADB_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql-config
+                key: root-password
+        ports:
+        - containerPort: 3306
+          name: mariadb
+        volumeMounts:
+        - name: mysql-data
+          mountPath: /var/lib/mysql/
+        - name: mariadb-config
+          mountPath: /etc/mysql/mariadb.conf.d
+        resources:
+          requests:
+            cpu: 750m
+            memory: 1.5Gi
+          limits:
+            cpu: 1000m
+            memory: 2Gi
+      volumes:
+      - name: mariadb-config
+        configMap:
+          name: mysql-cnf
+  volumeClaimTemplates:
+  - metadata:
+      name: mysql-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 50Gi
