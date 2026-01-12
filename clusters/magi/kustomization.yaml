@@ -6,3 +6,4 @@ resources:
   - app-tunnels.yaml
   - app-databases.yaml
   - app-micasa.yaml
+  - app-mrakaki.yaml
