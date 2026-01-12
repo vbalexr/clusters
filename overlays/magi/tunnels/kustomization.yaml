@@ -5,5 +5,5 @@ resources:
   - namespace.yaml
   - secrets-cloudflared.yaml
   - secrets-pangolin.yaml
-  - ../../../apps/pangolin
   - ../../../apps/cloudflared
+  - ../../../apps/pangolin

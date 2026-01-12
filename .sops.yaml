@@ -1,3 +1,5 @@
 creation_rules:
+- path_regex: .*values.yaml$
+  age: ["age1gfg2cjnueyul65k0sdd3x85t2n6tlnspmfe7g87xzjt6f86y2fas63kt3x"]
 - encrypted_regex: "^(data|stringData)$"
   age: ["age1gfg2cjnueyul65k0sdd3x85t2n6tlnspmfe7g87xzjt6f86y2fas63kt3x"]

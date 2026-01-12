@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: pangolin
+  labels:
+    app: pangolin
+spec:
+  selector:
+    matchLabels:
+      app: pangolin
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: pangolin
+    spec:
+      containers:
+        - name: pangolin-tuka
+          image: fosrl/newt
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: PANGOLIN_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: pangolin-env
+                  key: NEWT_ENDPOINT0
+            - name: NEWT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: pangolin-env
+                  key: NEWT_ID0
+            - name: NEWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: pangolin-env
+                  key: NEWT_SECRET0
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "256Mi"
+          securityContext:
+            readOnlyRootFilesystem: true
+        - name: pangolin-pinya
+          image: fosrl/newt
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: PANGOLIN_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: pangolin-env
+                  key: NEWT_ENDPOINT1
+            - name: NEWT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: pangolin-env
+                  key: NEWT_ID1
+            - name: NEWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: pangolin-env
+                  key: NEWT_SECRET1
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "256Mi"
+          securityContext:
+            readOnlyRootFilesystem: true
+        
