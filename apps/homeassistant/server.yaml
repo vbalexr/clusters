@@ -1,0 +1,55 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: home-assistant
+spec:
+  image: ghcr.io/home-assistant/home-assistant
+  interval: 5m
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: home-assistant
+spec:
+  imageRepositoryRef:
+    name: home-assistant
+  policy:
+    semver:
+      range: ">=0.0.0"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homeassistant
+  labels:
+    app: homeassistant
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: homeassistant
+  template:
+    metadata:
+      labels:
+        app: homeassistant
+    spec:
+      containers:
+      - name: homeassistant
+        image: ghcr.io/home-assistant/home-assistant:2026.1.0 # {"$imagepolicy": "home:home-assistant"}
+        ports:
+        - name: http
+          containerPort: 8123
+        volumeMounts:
+        - mountPath: /config
+          name: config
+        resources:
+          requests:
+            cpu: 232m
+            memory: 768Mi
+          limits:
+            cpu: 500m
+            memory: 1G
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: homeassistant

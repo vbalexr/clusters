@@ -4,3 +4,4 @@ resources:
   - infra-controllers.yaml
   - infra-configs.yaml
   - app-databases.yaml
+  - app-micasa.yaml
