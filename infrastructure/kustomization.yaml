@@ -11,3 +11,6 @@ resources:
   - metallb/namespace.yaml
   - metallb/repository.yaml
   - metallb/release.yaml
+
+  - multus/release.yaml
+  
