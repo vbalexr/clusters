@@ -3,15 +3,24 @@ kind: Kustomization
 namespace: micasa
 resources:
   - namespace.yaml
-  - secrets.yaml
+  - secrets-postgres.yaml
+  - secrets-redis.yaml
   - ../../../apps/homeassistant
   - ../../../apps/zigbee2mqtt
   - ../../../apps/mosquitto
+  - ../../../apps/immich
 
 patchesStrategicMerge:
   - patches/homeassistant-service.yaml
   - patches/homeassistant-storage.yaml
+
   - patches/zigbee2mqtt-storage.yaml
   - patches/zigbee2mqtt-service.yaml
+
   - patches/mosquitto-storage.yaml
   - patches/mosquitto-service.yaml
+
+  - patches/immich.yaml
+  - patches/immich-service.yaml
+  - patches/immich-ml.yaml
+  - patches/immich-ml-service.yaml
