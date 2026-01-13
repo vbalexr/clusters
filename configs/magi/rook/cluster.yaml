@@ -81,10 +81,10 @@ spec:
   # enable prometheus alerting for cluster
   monitoring:
     # requires Prometheus to be pre-installed
-    enabled: false
+    enabled: true
     # Whether to disable the metrics reported by Ceph. If false, the prometheus mgr module and Ceph exporter are enabled.
     # If true, the prometheus mgr module and Ceph exporter are both disabled. Default is false.
-    metricsDisabled: false
+    metricsDisabled: true
     # Ceph exporter metrics config.
     exporter:
       # Specifies which performance counters are exported.
