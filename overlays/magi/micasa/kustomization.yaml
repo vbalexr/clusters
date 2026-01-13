@@ -9,6 +9,7 @@ resources:
   - ../../../apps/zigbee2mqtt
   - ../../../apps/mosquitto
   - ../../../apps/immich
+  - ../../../apps/esphome
 
 patchesStrategicMerge:
   - patches/homeassistant-service.yaml
@@ -24,3 +25,6 @@ patchesStrategicMerge:
   - patches/immich-service.yaml
   - patches/immich-ml.yaml
   - patches/immich-ml-service.yaml
+
+  - patches/esphome-service.yaml
+  - patches/esphome-server.yaml
