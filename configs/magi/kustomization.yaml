@@ -9,3 +9,5 @@ resources:
   - rook/storageclass-rbd.yaml
 
   - metallb/config.yaml
+
+  - multus/cctv-net.yaml

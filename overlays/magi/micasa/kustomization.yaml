@@ -5,11 +5,13 @@ resources:
   - namespace.yaml
   - secrets-postgres.yaml
   - secrets-redis.yaml
+  - frigate-secret.yaml
   - ../../../apps/homeassistant
   - ../../../apps/zigbee2mqtt
   - ../../../apps/mosquitto
   - ../../../apps/immich
   - ../../../apps/esphome
+  - ../../../apps/frigate
 
 patchesStrategicMerge:
   - patches/homeassistant-service.yaml
