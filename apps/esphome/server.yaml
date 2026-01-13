@@ -1,0 +1,38 @@
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: esphome
+spec:
+  selector:
+    matchLabels:
+      app: esphome
+  serviceName: esphome
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: esphome
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: esphome
+        image: ghcr.io/esphome/esphome:2025.11.0-dev20251012
+        ports:
+        - containerPort: 6052
+          name: "http"
+        volumeMounts:
+        - name: data
+          mountPath: /config
+        resources:
+          requests:
+            cpu: 1000m
+            memory: 1.5G
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 25Gi
