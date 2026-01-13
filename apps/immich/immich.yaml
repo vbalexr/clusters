@@ -1,0 +1,106 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: immich
+  namespace: home
+spec:
+  image: ghcr.io/immich-app/immich-server
+  interval: 5m
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: immich
+  namespace: home
+spec:
+  imageRepositoryRef:
+    name: immich
+  policy:
+    semver:
+      range: 2.x.x
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: immich
+spec:
+  selector:
+    matchLabels:
+      app: immich
+  serviceName: immich
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: immich
+    spec:
+      terminationGracePeriodSeconds: 10
+      updateStrategy:
+        type: RollingUpdate
+      containers:
+      - name: immich
+        #image: ghcr.io/immich-app/immich-server:v2.4.1 # {"$imagepolicy": "home:immich"}
+        image: debian
+        command: ["/bin/sh", "-c", "while true; do echo hello; sleep 10; done"]
+        env:
+        - name: TZ
+          value: UTC
+        - name: DB_HOSTNAME
+          valueFrom:
+            secretKeyRef:
+              name: postgres-config
+              key: host
+        - name: DB_PORT
+          valueFrom:
+            secretKeyRef:
+              name: postgres-config
+              key: port
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: postgres-config
+              key: user
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-config
+              key: password
+        - name: DB_DATABASE_NAME
+          value: immich
+        - name: IMMICH_PORT
+          value: "2283"
+        - name: REDIS_HOSTNAME
+          valueFrom:
+            secretKeyRef:
+              name: redis-config
+              key: host
+        - name: REDIS_PORT
+          valueFrom:
+            secretKeyRef:
+              name: redis-config
+              key: port
+        - name: MACHINE_LEARNING_PORT
+          value: "3003"
+        - name: MACHINE_LEARNING_HOST
+          value: immich-machine-learning
+        ports:
+        - name: http
+          containerPort: 2283
+        volumeMounts:
+        - mountPath: /usr/src/app/upload
+          name: data
+        resources:
+          requests:
+            cpu: 2
+            memory: 8Gi
+          limits:
+            cpu: 2500m
+            memory: 8Gi
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 1.5Ti
