@@ -4,3 +4,11 @@ metadata:
   name: homeassistant
 spec:
   storageClassName: rook-cephfs
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: homeassistant-media
+spec:
+  storageClassName: rook-cephfs
