@@ -3,8 +3,9 @@ kind: Kustomization
 namespace: micasa
 resources:
   - namespace.yaml
-  - secrets-postgres.yaml
-  - secrets-redis.yaml
+  - immich-postgres-config.yaml
+  - immich-redis-config.yaml
+  - vaultwarden-postgres-config.yaml
   - frigate-secret.yaml
   - ../../../apps/homeassistant
   - ../../../apps/zigbee2mqtt
@@ -12,6 +13,7 @@ resources:
   - ../../../apps/immich
   - ../../../apps/esphome
   - ../../../apps/frigate
+  - ../../../apps/vaultwarden
 
 patchesStrategicMerge:
   - patches/homeassistant-service.yaml
@@ -30,3 +32,6 @@ patchesStrategicMerge:
 
   - patches/esphome-service.yaml
   - patches/esphome-server.yaml
+
+  - patches/vaultwarden-service.yaml
+  - patches/vaultwarden-storage.yaml

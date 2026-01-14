@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: postgres-vaultwarden-config
+type: Opaque
+stringData:
+    DATABASE_URL: postgresql://vaultwarden:AsKlkoi112@postgres.databases.svc.cluster.local:5432/vaultwarden
+    ADMIN_TOKEN: 9d64c711-fdcf8c9188af
