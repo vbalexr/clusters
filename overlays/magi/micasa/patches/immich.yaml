@@ -3,6 +3,18 @@ kind: StatefulSet
 metadata:
   name: immich
 spec:
+  template:
+    metadata:
+      labels:
+        app: immich
+      annotations:
+        k8s.v1.cni.cncf.io/networks: |
+            [{
+              "name": "home-net",
+              "namespace": "default",
+              "mac": "c6:5e:a4:8a:6a:5b",
+              "ips": ["172.16.15.202/24"]
+            }]
   volumeClaimTemplates:
     - metadata:
         name: data

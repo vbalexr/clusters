@@ -2,7 +2,6 @@ apiVersion: image.toolkit.fluxcd.io/v1
 kind: ImageRepository
 metadata:
   name: immich
-  namespace: home
 spec:
   image: ghcr.io/immich-app/immich-server
   interval: 5m
@@ -11,7 +10,6 @@ apiVersion: image.toolkit.fluxcd.io/v1
 kind: ImagePolicy
 metadata:
   name: immich
-  namespace: home
 spec:
   imageRepositoryRef:
     name: immich
@@ -39,7 +37,7 @@ spec:
         type: RollingUpdate
       containers:
       - name: immich
-        image: ghcr.io/immich-app/immich-server:v2.4.1 # {"$imagepolicy": "home:immich"}
+        image: ghcr.io/immich-app/immich-server:v2.4.1 # {"$imagepolicy": "immich"}
         env:
         - name: TZ
           value: UTC
