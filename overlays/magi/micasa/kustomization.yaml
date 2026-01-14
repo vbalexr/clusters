@@ -18,6 +18,7 @@ resources:
 patchesStrategicMerge:
   - patches/homeassistant-service.yaml
   - patches/homeassistant-storage.yaml
+  - patches/homeassistant-deployment.yaml
 
   - patches/zigbee2mqtt-storage.yaml
   - patches/zigbee2mqtt-service.yaml

@@ -11,3 +11,4 @@ resources:
   - metallb/config.yaml
 
   - multus/cctv-net.yaml
+  - multus/home-net.yaml
