@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homeassistant
+spec:
+  template:
+    metadata:
+      annotations:
+        k8s.v1.cni.cncf.io/networks: |
+            [{
+              "name": "home-net",
+              "namespace": "default",
+              "mac": "c6:5e:a4:8a:6a:5a",
+              "ips": ["172.16.15.201/24"]
+            }]
+          
