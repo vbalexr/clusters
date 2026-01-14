@@ -48,22 +48,22 @@ spec:
         - name: DB_HOSTNAME
           valueFrom:
             secretKeyRef:
-              name: postgres-config
+              name: immich-postgres-config
               key: host
         - name: DB_PORT
           valueFrom:
             secretKeyRef:
-              name: postgres-config
+              name: immich-postgres-config
               key: port
         - name: DB_USERNAME
           valueFrom:
             secretKeyRef:
-              name: postgres-config
+              name: immich-postgres-config
               key: user
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: postgres-config
+              name: immich-postgres-config
               key: password
         - name: DB_DATABASE_NAME
           value: immich
@@ -72,12 +72,12 @@ spec:
         - name: REDIS_HOSTNAME
           valueFrom:
             secretKeyRef:
-              name: redis-config
+              name: immich-redis-config
               key: host
         - name: REDIS_PORT
           valueFrom:
             secretKeyRef:
-              name: redis-config
+              name: immich-redis-config
               key: port
         - name: MACHINE_LEARNING_PORT
           value: "3003"

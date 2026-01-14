@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Secret
 metadata:
-    name: redis-config
+    name: immich-redis-config
 type: Opaque
 stringData:
     host: ENC[AES256_GCM,data:VSEcMqqc+zx4tmWE7inGEF1S5B3Nz4tVv1+Ac0TD2fMB,iv:SODH7iCd8Sk44l9POVZdR/V+YpeE0kUpM3sr3TWnonI=,tag:W0RUkn0C7xBQX/5VwbH/jg==,type:str]

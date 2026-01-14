@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: postgres-vaultwarden-config
+type: Opaque
+stringData:
+    DATABASE_URL: ENC[AES256_GCM,data:aPb9MCEIviyq02B2tio7LK3GsdAIkX8ela2QT6cPRx5cUXQhdLDfYiTqNir107HTJEehDwKXLbtid9PzOuFD9rSqai6hB7O8eFWZUDA+2+spCAGcgzmQmLQ=,iv:OvQ+dv1tRyOSOlC7Eo2LixVX2vHo9/mnuvo3pAiFIu0=,tag:5gkY2GIDzy7eHRRGVyXljg==,type:str]
+    ADMIN_TOKEN: ENC[AES256_GCM,data:xXLD5dXi7XFycAE/lO8xy+aF1FFG,iv:PjtqopMEDPt8SkTTT8a+kn347Aro+ypidMY3yDJxhPc=,tag:TRJjdK3sj1MHgLGGHZ3FZA==,type:str]
+sops:
+    age:
+        - recipient: age1gfg2cjnueyul65k0sdd3x85t2n6tlnspmfe7g87xzjt6f86y2fas63kt3x
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSA0cjMzU3AzeC9LTW1WMkU0
+            M2g0RlVIb0laeG1hMDIyRitjYjNXWHhOZGdvClF2TFo1SWNFaGl6bjFJMUsyeVhF
+            R3lmV0tFUVhrNllvQVgweWEyR2hOMEkKLS0tIE0vQjRpRHZ4cGpKVFVjOTZ1QTJW
+            S0U5SE01YXZnM0p1azg4WVQrVjMzclUKGN/Ofy8EjS4k7UHNC208Kr14rjS55X3s
+            Et43Wh26DSjiatKg6bskqebiTX9ZYkE5I/ZYKQEwQll8V8yqSyHa+w==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2026-01-22T20:42:58Z"
+    mac: ENC[AES256_GCM,data:MZ1cu6mOx0EsLeBUQVfXczVZEShMF+bl5htQDCAhG8tR284hmdxaI+FcvbyVByYXGUQ90z5qDCCzEc+/9CJXNMuQbNgnyYhJbVyw/U41u8hKlp7DFrT6wOWMC1izYzoVtw+nMSiEfmaVXf1WjMyKFWEvvWvRIEoyxqiNqzyvwn4=,iv:UiJ17xIMeJLtrv+qtsQSPXrO0cn0NNwFdui75UqUY9M=,tag:t4bKLNdfvCWgwmZeH9Oifw==,type:str]
+    encrypted_regex: ^(data|stringData)$
+    version: 3.11.0
