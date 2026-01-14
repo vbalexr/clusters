@@ -39,9 +39,7 @@ spec:
         type: RollingUpdate
       containers:
       - name: immich
-        #image: ghcr.io/immich-app/immich-server:v2.4.1 # {"$imagepolicy": "home:immich"}
-        image: debian
-        command: ["/bin/sh", "-c", "while true; do echo hello; sleep 10; done"]
+        image: ghcr.io/immich-app/immich-server:v2.4.1 # {"$imagepolicy": "home:immich"}
         env:
         - name: TZ
           value: UTC
