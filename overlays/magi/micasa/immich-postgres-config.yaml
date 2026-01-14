@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Secret
 metadata:
-    name: postgres-config
+    name: immich-postgres-config
 type: Opaque
 stringData:
     host: ENC[AES256_GCM,data:DExDqQwAcjg1DqC9y+CjQCi+rL0qn6qOBlA0w8cfcdNl6y3E,iv:rhbtbLnmu+qNMlD8/LRROPd2bAysVID8knhZptzSBTs=,tag:UIiEiJKRWUHDh+3cwIpp/Q==,type:str]
