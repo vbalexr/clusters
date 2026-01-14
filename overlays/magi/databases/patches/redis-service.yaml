@@ -5,7 +5,7 @@ metadata:
   annotations:
     metallb.io/address-pool: prod-services
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ipFamilyPolicy: PreferDualStack
   ipFamilies:
     - IPv4
