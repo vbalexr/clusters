@@ -1,15 +1,14 @@
 apiVersion: apps/v1
-kind: DaemonSet
+kind: Deployment
 metadata:
   name: pangolin
   labels:
     app: pangolin
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: pangolin
-  updateStrategy:
-    type: RollingUpdate
   template:
     metadata:
       labels:
