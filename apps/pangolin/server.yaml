@@ -15,7 +15,7 @@ spec:
         app: pangolin
     spec:
       containers:
-        - name: pangolin-tuka
+        - name: pangolin
           image: fosrl/newt
           imagePullPolicy: IfNotPresent
           env:
@@ -23,45 +23,17 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: pangolin-env
-                  key: NEWT_ENDPOINT0
+                  key: NEWT_ENDPOINT
             - name: NEWT_ID
               valueFrom:
                 secretKeyRef:
                   name: pangolin-env
-                  key: NEWT_ID0
+                  key: NEWT_ID
             - name: NEWT_SECRET
               valueFrom:
                 secretKeyRef:
                   name: pangolin-env
-                  key: NEWT_SECRET0
-          resources:
-            requests:
-              cpu: "50m"
-              memory: "64Mi"
-            limits:
-              cpu: "200m"
-              memory: "256Mi"
-          securityContext:
-            readOnlyRootFilesystem: true
-        - name: pangolin-pinya
-          image: fosrl/newt
-          imagePullPolicy: IfNotPresent
-          env:
-            - name: PANGOLIN_ENDPOINT
-              valueFrom:
-                secretKeyRef:
-                  name: pangolin-env
-                  key: NEWT_ENDPOINT1
-            - name: NEWT_ID
-              valueFrom:
-                secretKeyRef:
-                  name: pangolin-env
-                  key: NEWT_ID1
-            - name: NEWT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: pangolin-env
-                  key: NEWT_SECRET1
+                  key: NEWT_SECRET
           resources:
             requests:
               cpu: "50m"
