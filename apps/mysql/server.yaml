@@ -16,7 +16,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: mariadb
-        image: mariadb
+        image: mariadb:12.1.2
         env:
           - name: MARIADB_ROOT_PASSWORD
             valueFrom:
@@ -31,13 +31,29 @@ spec:
           mountPath: /var/lib/mysql/
         - name: mariadb-config
           mountPath: /etc/mysql/mariadb.conf.d
+        livenessProbe:
+          tcpSocket:
+            port: 3306
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+        startupProbe:
+          exec:
+            command: ["sh", "-c", "mariadb-admin ping --silent -h 127.0.0.1 -uroot -p$MARIADB_ROOT_PASSWORD"]
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 5
+          failureThreshold: 60
+        readinessProbe:
+          exec:
+            command: ["sh", "-c", "mariadb-admin ping --silent -h 127.0.0.1 -uroot -p$MARIADB_ROOT_PASSWORD"]
+          initialDelaySeconds: 15
+          periodSeconds: 5
+          timeoutSeconds: 10
         resources:
           requests:
-            cpu: 750m
-            memory: 1.5Gi
-          limits:
-            cpu: 1000m
-            memory: 2Gi
+            cpu: 2000m
+            memory: 6Gi
       volumes:
       - name: mariadb-config
         configMap:
