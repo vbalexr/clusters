@@ -34,6 +34,10 @@ spec:
                 key: user
           - name: POSTGRES_INITDB_ARGS
             value: '--data-checksums'
+        resources:
+          requests:
+            cpu: 2000m
+            memory: 6Gi
         ports:
         - containerPort: 5432
           name: "postgres"
