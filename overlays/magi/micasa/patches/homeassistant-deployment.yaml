@@ -13,4 +13,17 @@ spec:
               "mac": "c6:5e:a4:8a:6a:5a",
               "ips": ["172.16.15.201/24"]
             }]
-          
+    spec:
+      initContainers:
+      - name: route-init
+        image: wbitt/network-multitool:latest
+        securityContext:
+          privileged: true
+        command:
+        - /bin/sh
+        - -c
+        - |
+          set -eux
+          ip route add 172.16.15.0/24 dev net1 table 100
+          ip route add default via 172.16.15.1 dev net1 table 100
+          ip rule add from 172.16.15.201 lookup 100
