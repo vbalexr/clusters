@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: npm-wg-nginx-custom
+data:
+  http.conf: |
+    set_real_ip_from 10.200.0.1;
+  stream.conf: |
+    server {
+      listen 1080 proxy_protocol;
+      proxy_pass 127.0.0.1:80;
+    }
+    server {
+      listen 1443 proxy_protocol;
+      proxy_pass 127.0.0.1:443;
+    }
+  listen.conf: |
+    listen 1080;
+    listen 1443 ssl;
+  proxy.conf: |
+    client_max_body_size 0;
+    proxy_request_buffering off;
+    proxy_buffering off;
