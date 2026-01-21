@@ -4,6 +4,8 @@ namespace: tunnels
 resources:
   - namespace.yaml
   - secrets-cloudflared.yaml
-  - secrets-pangolin.yaml
+  - npm-wg-secret.yaml
   - ../../../apps/cloudflared
-  - ../../../apps/pangolin
+  - ../../../apps/npm-wg
+patchesStrategicMerge:
+  - patches/npm-wg.yaml

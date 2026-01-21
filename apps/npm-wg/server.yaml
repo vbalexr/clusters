@@ -1,0 +1,158 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: npm-wg
+spec:
+  selector:
+    matchLabels:
+      app: npm-wg
+  serviceName: npm-wg
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: npm-wg
+    spec:
+      initContainers:
+      - name: init-nginx-custom
+        image: busybox:1.36
+        command:
+          - sh
+          - -c
+          - |
+            set -e
+            mkdir -p /data/nginx/custom
+            cp -f /config/http.conf /data/nginx/custom/http.conf
+            cp -f /config/stream.conf /data/nginx/custom/stream.conf
+            cp -f /config/listen.conf /data/nginx/custom/listen.conf
+            cp -f /config/proxy.conf /data/nginx/custom/proxy.conf
+
+        volumeMounts:
+        - name: npm-data
+          mountPath: /data
+        - name: nginx-custom
+          mountPath: /config
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: wireguard
+        image: lscr.io/linuxserver/wireguard:latest
+        securityContext:
+          privileged: true
+          capabilities:
+            add:
+              - NET_ADMIN
+              - SYS_MODULE
+        env:
+          - name: TZ
+            value: UTC
+          - name: PUID
+            value: "1000"
+          - name: PGID
+            value: "1000"
+        volumeMounts:
+        - name: wg-secret
+          mountPath: /etc/wireguard/wg0.conf
+          subPath: wg0.conf
+        - name: tun-device
+          mountPath: /dev/net/tun
+        - name: modules
+          mountPath: /lib/modules
+        livenessProbe:
+          exec:
+            command: ["sh", "-c", "wg show || ip link show wg0"]
+          initialDelaySeconds: 20
+          periodSeconds: 10
+          timeoutSeconds: 5
+        readinessProbe:
+          exec:
+            command: ["sh", "-c", "wg show || ip link show wg0"]
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+      - name: nginx-proxy-manager
+        image: jc21/nginx-proxy-manager:latest
+        env:
+          - name: TZ
+            value: UTC
+          - name: DB_MYSQL_HOST
+            valueFrom:
+              secretKeyRef:
+                name: npm-wg-secret
+                key: db-host
+          - name: DB_MYSQL_PORT
+            valueFrom:
+              secretKeyRef:
+                name: npm-wg-secret
+                key: db-port
+          - name: DB_MYSQL_NAME
+            valueFrom:
+              secretKeyRef:
+                name: npm-wg-secret
+                key: db-name
+          - name: DB_MYSQL_USER
+            valueFrom:
+              secretKeyRef:
+                name: npm-wg-secret
+                key: db-user
+          - name: DB_MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: npm-wg-secret
+                key: db-password
+        ports:
+          - containerPort: 80
+            name: http
+            protocol: TCP
+          - containerPort: 81
+            name: management
+            protocol: TCP
+          - containerPort: 443
+            name: https
+            protocol: TCP
+        volumeMounts:
+        - name: npm-data
+          mountPath: /data
+        - name: npm-ssl
+          mountPath: /etc/letsencrypt
+      volumes:
+      - name: wg-secret
+        secret:
+          secretName: npm-wg-secret
+          items:
+            - key: wg0.conf
+              path: wg0.conf
+      - name: nginx-custom
+        configMap:
+          name: npm-wg-nginx-custom
+          items:
+            - key: http.conf
+              path: http.conf
+            - key: stream.conf
+              path: stream.conf
+            - key: listen.conf
+              path: listen.conf
+            - key: proxy.conf
+              path: proxy.conf
+      - name: tun-device
+        hostPath:
+          path: /dev/net/tun
+          type: CharDevice
+      - name: modules
+        hostPath:
+          path: /lib/modules
+          type: Directory
+  volumeClaimTemplates:
+  - metadata:
+      name: npm-data
+    spec:
+      accessModes: [ "ReadWriteMany" ]
+      resources:
+        requests:
+          storage: 10Gi
+  - metadata:
+      name: npm-ssl
+    spec:
+      accessModes: [ "ReadWriteMany" ]
+      resources:
+        requests:
+          storage: 2Gi
