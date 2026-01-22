@@ -37,7 +37,7 @@ spec:
         type: RollingUpdate
       containers:
         - name: immich-ml
-          image: ghcr.io/immich-app/immich-machine-learning:v2.4.1 # {"$imagepolicy": "home:immich-ml"}
+          image: ghcr.io/immich-app/immich-machine-learning:v2.4.1 # {"$imagepolicy": "immich-ml"}
           env:
             - name: IMMICH_PORT
               value: "3003"
