@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - server.yaml
   - service.yaml
+  - image-update-automation.yaml
