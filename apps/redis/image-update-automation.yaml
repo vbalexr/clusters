@@ -11,7 +11,7 @@ spec:
       author:
         email: fluxcdbot@users.noreply.github.com
         name: fluxcdbot
-      messageTemplate: '{{range .Changed.Changes}}{{print .OldValue}} -> {{println .NewValue}}{{end}}'
+      messageTemplate: 'auto-update: update redis to {{range .Changed.Changes}}{{.NewValue}}{{end}} from {{range .Changed.Changes}}{{.OldValue}}{{end}}'
     push:
       branch: main
   interval: 30m0s
