@@ -1,3 +1,22 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: redis
+spec:
+  image: redis
+  interval: 5m
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: redis
+spec:
+  imageRepositoryRef:
+    name: redis
+  policy:
+    semver:
+      range: ">=0.0.0"
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -16,7 +35,7 @@ spec:
     spec:
       containers:
         - name: redis
-          image: redis
+          image: redis:8.4.0 # {"$imagepolicy": "redis"}
           ports:
             - name: http
               containerPort: 6379
