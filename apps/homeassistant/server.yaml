@@ -37,7 +37,7 @@ spec:
         type: Recreate
       containers:
       - name: homeassistant
-        image: ghcr.io/home-assistant/home-assistant:2026.1.0 # {"$imagepolicy": "home:home-assistant"}
+        image: ghcr.io/home-assistant/home-assistant:2026.1.0 # {"$imagepolicy": "home-assistant"}
         ports:
         - name: http
           containerPort: 8123
