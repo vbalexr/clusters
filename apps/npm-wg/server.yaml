@@ -43,8 +43,6 @@ spec:
               - NET_ADMIN
               - SYS_MODULE
         env:
-          - name: TZ
-            value: UTC
           - name: PUID
             value: "1000"
           - name: PGID
@@ -72,8 +70,6 @@ spec:
       - name: nginx-proxy-manager
         image: jc21/nginx-proxy-manager:latest
         env:
-          - name: TZ
-            value: UTC
           - name: DB_MYSQL_HOST
             valueFrom:
               secretKeyRef:

@@ -1,0 +1,97 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: timezone-costa-rica
+spec:
+  background: true
+  rules:
+    - name: add-tz-env
+      match:
+        resources:
+          kinds:
+            - Pod
+          namespaces:
+            - databases
+            - micasa
+            - mrakaki
+            - tunnels
+      exclude:
+        resources:
+          namespaces:
+            - flux-system
+            - kube-system
+            - kyverno
+      mutate:
+        patchStrategicMerge:
+          apiVersion: v1
+          kind: Pod
+          spec:
+            containers:
+              - (name): "*"
+                env:
+                  - name: TZ
+                    value: America/Costa_Rica
+            initContainers:
+              - (name): "*"
+                env:
+                  - name: TZ
+                    value: America/Costa_Rica
+    - name: add-localtime-volume
+      match:
+        resources:
+          kinds:
+            - Pod
+          namespaces:
+            - databases
+            - micasa
+            - mrakaki
+            - tunnels
+      exclude:
+        resources:
+          namespaces:
+            - flux-system
+            - kube-system
+            - kyverno
+      mutate:
+        patchStrategicMerge:
+          apiVersion: v1
+          kind: Pod
+          spec:
+            volumes:
+              - name: tz-localtime
+                hostPath:
+                  path: /etc/localtime
+                  type: File
+    - name: add-localtime-volume-mounts
+      match:
+        resources:
+          kinds:
+            - Pod
+          namespaces:
+            - databases
+            - micasa
+            - mrakaki
+            - tunnels
+      exclude:
+        resources:
+          namespaces:
+            - flux-system
+            - kube-system
+            - kyverno
+      mutate:
+        patchStrategicMerge:
+          apiVersion: v1
+          kind: Pod
+          spec:
+            containers:
+              - (name): "*"
+                volumeMounts:
+                  - name: tz-localtime
+                    mountPath: /etc/localtime
+                    readOnly: true
+            initContainers:
+              - (name): "*"
+                volumeMounts:
+                  - name: tz-localtime
+                    mountPath: /etc/localtime
+                    readOnly: true

@@ -12,3 +12,5 @@ resources:
 
   - multus/cctv-net.yaml
   - multus/home-net.yaml
+  
+  - kyverno/timezone-policy.yaml
