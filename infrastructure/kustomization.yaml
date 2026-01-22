@@ -19,3 +19,7 @@ resources:
 
   - multus/release.yaml
   
+  - kyverno/namespace.yaml
+  - kyverno/repository.yaml
+  - kyverno/release.yaml
+  
