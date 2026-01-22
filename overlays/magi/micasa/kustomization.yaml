@@ -14,6 +14,7 @@ resources:
   - ../../../apps/esphome
   - ../../../apps/frigate
   - ../../../apps/vaultwarden
+  - ../../../apps/immichFrame
 
 patchesStrategicMerge:
   - patches/homeassistant-service.yaml
@@ -36,3 +37,6 @@ patchesStrategicMerge:
 
   - patches/vaultwarden-service.yaml
   - patches/vaultwarden-storage.yaml
+
+  - patches/immichFrame-service.yaml
+  - patches/immichFrame-storage.yaml
