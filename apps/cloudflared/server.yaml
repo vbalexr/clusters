@@ -1,15 +1,33 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: cloudflared
+spec:
+  image: cloudflare/cloudflared
+  interval: 5m
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: cloudflared
+spec:
+  imageRepositoryRef:
+    name: cloudflared
+  policy:
+    semver:
+      range: ">=0.0.0"
+---
 apiVersion: apps/v1
-kind: DaemonSet
+kind: Deployment
 metadata:
   name: cloudflared
   labels:
     app: cloudflared
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: cloudflared
-  updateStrategy:
-    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -17,7 +35,7 @@ spec:
     spec:
       containers:
         - name: cloudflared
-          image: cloudflare/cloudflared:latest
+          image: cloudflare/cloudflared:2026.1.1 # {"$imagepolicy": "cloudflared"}
           imagePullPolicy: IfNotPresent
           args:
             - tunnel
