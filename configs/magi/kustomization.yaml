@@ -14,3 +14,6 @@ resources:
   - multus/home-net.yaml
   
   - kyverno/timezone-policy.yaml
+
+  - k3s-upgrade/server.yaml
+  - k3s-upgrade/agent.yaml
