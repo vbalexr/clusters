@@ -6,15 +6,14 @@ resources:
   - immich-postgres-config.yaml
   - immich-redis-config.yaml
   - vaultwarden-postgres-config.yaml
-  - frigate-secret.yaml
   - ../../../apps/homeassistant
   - ../../../apps/zigbee2mqtt
   - ../../../apps/mosquitto
   - ../../../apps/immich
   - ../../../apps/esphome
-  - ../../../apps/frigate
   - ../../../apps/vaultwarden
   - ../../../apps/immichFrame
+  - ../../../apps/frigate
 
 patchesStrategicMerge:
   - patches/homeassistant-service.yaml
@@ -39,3 +38,5 @@ patchesStrategicMerge:
 
   - patches/immichFrame-service.yaml
   - patches/immichFrame-storage.yaml
+  - patches/frigate.yaml
+  - patches/frigate-service.yaml
