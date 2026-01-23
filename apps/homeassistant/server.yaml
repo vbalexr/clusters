@@ -18,7 +18,7 @@ spec:
       range: ">=0.0.0"
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: homeassistant
   labels:
@@ -28,13 +28,12 @@ spec:
   selector:
     matchLabels:
       app: homeassistant
+  serviceName: homeassistant
   template:
     metadata:
       labels:
         app: homeassistant
     spec:
-      strategy:
-        type: Recreate
       containers:
       - name: homeassistant
         image: ghcr.io/home-assistant/home-assistant:2026.1.0 # {"$imagepolicy": "home-assistant"}
@@ -53,10 +52,20 @@ spec:
           limits:
             cpu: 500m
             memory: 1G
-      volumes:
-      - name: config
-        persistentVolumeClaim:
-          claimName: homeassistant
-      - name: media
-        persistentVolumeClaim:
-          claimName: homeassistant-media
+  volumeClaimTemplates:
+  - metadata:
+      name: config
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 25Gi
+  - metadata:
+      name: media
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 50Gi
