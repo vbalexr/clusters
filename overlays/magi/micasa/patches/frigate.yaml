@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: frigate
+spec:
+  volumeClaimTemplates:
+  - metadata:
+      name: config
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      storageClassName: rook-ceph-block
+      resources:
+        requests:
+          storage: 1Gi
+  - metadata:
+      name: media
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      storageClassName: rook-ceph-block
+      resources:
+        requests:
+          storage: 1Ti
+  template:
+    metadata:
+      annotations:
+        k8s.v1.cni.cncf.io/networks: |
+          [{
+              "name": "cctv-net",
+              "namespace": "default",
+              "mac": "c6:5e:a4:8e:7a:59",
+              "ips": ["172.16.25.201/24"]
+          }]
+    spec:
+      initContainers:
+      - name: route-init
+        image: wbitt/network-multitool:latest
+        securityContext:
+          privileged: true
+        command:
+        - /bin/sh
+        - -c
+        - |
+          set -eux
+          ip route add 172.16.25.0/24 dev net1 table 100
+          ip route add default via 172.16.25.1 dev net1 table 100
+          ip rule add from 172.16.25.201 lookup 100
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                - key: feature.node.kubernetes.io/coral-tpu.installed
+                  operator: In
+                  values:
+                    - "true"
