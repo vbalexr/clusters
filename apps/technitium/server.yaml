@@ -1,0 +1,109 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: technitium
+spec:
+  image: technitium/dns-server
+  interval: 5m
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: technitium
+spec:
+  imageRepositoryRef:
+    name: technitium
+  policy:
+    semver:
+      range: ">=0.0.0"
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: technitium-dns
+  labels:
+    app: technitium-dns
+spec:
+  serviceName: technitium-dns-headless
+  replicas: 1
+  selector:
+    matchLabels:
+      app: technitium-dns
+  template:
+    metadata:
+      labels:
+        app: technitium-dns
+    spec:
+      containers:
+      - name: technitium
+        image: technitium/dns-server:14.3.0 # {"$imagepolicy": "technitium"}
+        ports:
+          - name: dns-tcp
+            containerPort: 53
+            protocol: TCP
+          - name: dns-udp
+            containerPort: 53
+            protocol: UDP
+          - name: admin
+            containerPort: 53443
+            protocol: TCP
+          - name: web
+            containerPort: 5380
+            protocol: TCP
+          - name: dot-tcp
+            containerPort: 853
+            protocol: TCP
+          - name: dot-udp
+            containerPort: 853
+            protocol: UDP
+          - name: dns-doh
+            containerPort: 443
+            protocol: TCP
+        startupProbe:
+          httpGet:
+            path: "/"
+            port: 5380
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 60
+        readinessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - dig @127.0.0.1 -p 53 . NS +time=2 +tries=1 +nocookie >/dev/null 2>&1
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        livenessProbe:
+          tcpSocket:
+            port: 53
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
+        env:
+        - name: DNS_SERVER_DOMAIN
+          value: technitium-dns
+        volumeMounts:
+        - name: config
+          mountPath: /etc/dns
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 250m
+            memory: 512Mi
+  volumeClaimTemplates:
+  - metadata:
+      name: config
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
