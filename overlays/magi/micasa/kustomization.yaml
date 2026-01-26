@@ -14,6 +14,7 @@ resources:
   - ../../../apps/vaultwarden
   - ../../../apps/immichFrame
   - ../../../apps/frigate
+  - ../../../apps/technitium
 
 patchesStrategicMerge:
   - patches/homeassistant-service.yaml
@@ -38,5 +39,8 @@ patchesStrategicMerge:
 
   - patches/immichFrame-service.yaml
   - patches/immichFrame-storage.yaml
+
   - patches/frigate.yaml
   - patches/frigate-service.yaml
+  
+  - patches/technitium.yaml
