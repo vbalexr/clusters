@@ -1,0 +1,140 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kube-prometheus-stack
+  namespace: monitoring
+spec:
+  interval: 10m
+  chart:
+    spec:
+      chart: kube-prometheus-stack
+      version: "65.*"
+      sourceRef:
+        kind: HelmRepository
+        name: prometheus-community
+        namespace: monitoring
+  targetNamespace: monitoring
+  install:
+    createNamespace: true
+    crds: Create
+    remediation:
+      retries: 3
+  upgrade:
+    crds: Create
+    remediation:
+      retries: 3
+  values:
+    kubeEtcd:
+      enabled: false
+    grafana:
+      enabled: true
+      service:
+        type: ClusterIP
+      defaultDashboardsEnabled: true
+    alertmanager:
+      enabled: true
+      service:
+        type: ClusterIP
+    prometheus:
+      service:
+        type: ClusterIP
+      prometheusSpec:
+        retention: 15d
+        serviceMonitorSelectorNilUsesHelmValues: false
+        podMonitorSelectorNilUsesHelmValues: false
+
+    # Common custom alerting rules for pod/container resource requests vs usage
+    additionalPrometheusRulesMap:
+      pod-resource-requests:
+        groups:
+          - name: pod-resource-requests
+            rules:
+              - alert: ContainerMemoryRequestExceeded
+                expr: |
+                  (
+                    container_memory_working_set_bytes{
+                      job="kubelet",
+                      container!~"^$|POD",
+                      image!=""
+                    }
+                  )
+                  /
+                  on(namespace,pod,container)
+                  group_left()
+                  (
+                    kube_pod_container_resource_requests{
+                      resource="memory"
+                    }
+                  )
+                  > 1.0
+                for: 5m
+                labels:
+                  severity: warning
+                annotations:
+                  summary: Container memory usage exceeds its request
+                  description: >-
+                    Container {{ $labels.namespace }}/{{ $labels.pod }} ({{ $labels.container }})
+                    uses more memory than requested.
+
+              - alert: ContainerCPURequestExceeded
+                expr: |
+                  (
+                    rate(
+                      container_cpu_usage_seconds_total{
+                        job="kubelet",
+                        container!~"^$|POD",
+                        image!=""
+                      }[5m]
+                    )
+                  )
+                  /
+                  on(namespace,pod,container)
+                  group_left()
+                  (
+                    kube_pod_container_resource_requests{
+                      resource="cpu"
+                    }
+                  )
+                  > 1.0
+                for: 5m
+                labels:
+                  severity: warning
+                annotations:
+                  summary: Container CPU usage exceeds its request
+                  description: >-
+                    Container {{ $labels.namespace }}/{{ $labels.pod }} ({{ $labels.container }})
+                    uses more CPU than requested.
+
+              - alert: ContainerMissingRequests
+                expr: |
+                  (
+                    sum by (namespace,pod,container) (
+                      kube_pod_container_info
+                    )
+                    unless
+                    sum by (namespace,pod,container) (
+                      kube_pod_container_resource_requests{
+                        resource="cpu"
+                      }
+                    )
+                  )
+                  or
+                  (
+                    sum by (namespace,pod,container) (
+                      kube_pod_container_info
+                    )
+                    unless
+                    sum by (namespace,pod,container) (
+                      kube_pod_container_resource_requests{
+                        resource="memory"
+                      }
+                    )
+                  )
+                for: 10m
+                labels:
+                  severity: warning
+                annotations:
+                  summary: Container missing CPU or memory requests
+                  description: >-
+                    Container {{ $labels.namespace }}/{{ $labels.pod }} ({{ $labels.container }})
+                    does not define CPU or memory requests.

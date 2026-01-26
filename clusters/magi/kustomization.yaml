@@ -7,3 +7,4 @@ resources:
   - app-databases.yaml
   - app-micasa.yaml
   - app-mrakaki.yaml
+  - app-monitoring.yaml
