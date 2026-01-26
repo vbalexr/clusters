@@ -27,10 +27,10 @@ spec:
       annotations:
         k8s.v1.cni.cncf.io/networks: |
           [{
-              "name": "cctv-net",
-              "namespace": "default",
-              "mac": "c6:5e:a4:8e:7a:59",
-              "ips": ["172.16.25.201/24"]
+            "name": "cctv-net",
+            "namespace": "default",
+            "interface": "net1",
+            "ips": ["172.16.25.200/24"]
           }]
     spec:
       initContainers:
@@ -43,9 +43,12 @@ spec:
         - -c
         - |
           set -eux
-          ip route add 172.16.25.0/24 dev net1 table 100
-          ip route add default via 172.16.25.1 dev net1 table 100
-          ip rule add from 172.16.25.201 lookup 100
+          # IPv4 routes (idempotent)
+          ip -4 route replace 172.16.25.0/24 dev net1 table 100
+          ip -4 route replace default via 172.16.25.1 dev net1 table 100
+
+          # IPv4 rule (add only if missing)
+          ip -4 rule show | grep -q "from 172.16.25.201 .* lookup 100" || ip -4 rule add from 172.16.25.201 lookup 100
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
