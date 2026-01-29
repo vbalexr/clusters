@@ -29,27 +29,10 @@ spec:
           [{
             "name": "cctv-net",
             "namespace": "default",
-            "interface": "net1",
             "ips": ["172.16.25.200/24"]
           }]
     spec:
-      initContainers:
-      - name: route-init
-        image: wbitt/network-multitool:latest
-        securityContext:
-          privileged: true
-        command:
-        - /bin/sh
-        - -c
-        - |
-          set -eux
-          # IPv4 routes (idempotent)
-          ip -4 route replace 172.16.25.0/24 dev net1 table 100
-          ip -4 route replace default via 172.16.25.1 dev net1 table 100
-
-          # IPv4 rule (add only if missing)
-          ip -4 rule show | grep -q "from 172.16.25.201 .* lookup 100" || ip -4 rule add from 172.16.25.201 lookup 100
-      affinity:
+       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:

@@ -30,38 +30,9 @@ spec:
             [{
               "name": "home-net",
               "namespace": "default",
-              "mac": "c6:5e:a4:8a:6a:5a",
               "ips": ["172.16.15.201/24","fd7a:6e5b:beff:15::201/64"]
             },{
               "name": "iot-net",
               "namespace": "default",
-              "mac": "c6:5e:a4:8f:6a:5a",
               "ips": ["172.16.20.201/24"]
             }]
-    spec:
-      initContainers:
-      - name: route-init
-        image: wbitt/network-multitool:latest
-        securityContext:
-          privileged: true
-        command:
-        - /bin/sh
-        - -c
-        - |
-          set -eux
-          # IPv4 routes (idempotent)
-          ip -4 route replace 172.16.15.0/24 dev net1 table 100
-          ip -4 route replace 172.16.20.0/24 dev net2 table 100
-          ip -4 route replace default via 172.16.15.1 dev net1 table 100
-          ip -4 route replace default via 172.16.20.1 dev net2 table 100
-
-          # IPv4 rule (add only if missing)
-          ip -4 rule show | grep -q "from 172.16.15.201 .* lookup 100" || ip -4 rule add from 172.16.15.201 lookup 100
-          ip -4 rule show | grep -q "from 172.16.20.201 .* lookup 100" || ip -4 rule add from 172.16.20.201 lookup 100
-
-          # IPv6 routes (idempotent)
-          ip -6 route replace fd7a:6e5b:beff:15::/64 dev net1 table 100
-          ip -6 route replace default via fd7a:6e5b:beff:15::1 dev net1 table 100
-
-          # IPv6 rule (add only if missing)
-          ip -6 rule show | grep -q "from fd7a:6e5b:beff:15::201 .* lookup 100" || ip -6 rule add from fd7a:6e5b:beff:15::201 lookup 100
