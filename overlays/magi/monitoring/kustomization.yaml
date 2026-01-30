@@ -13,3 +13,9 @@ patches:
       namespace: monitoring
     path: patches/kps-values.yaml
     optional: true
+  - target:
+      kind: HelmRelease
+      name: loki
+      namespace: monitoring
+    path: patches/loki-storage.yaml
+    optional: true

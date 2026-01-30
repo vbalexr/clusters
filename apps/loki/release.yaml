@@ -23,6 +23,8 @@ spec:
       retries: 3
   values:
     fullnameOverride: loki
+    # Explicitly run Loki in SingleBinary mode to avoid object storage requirement
+    deploymentMode: SingleBinary
     loki:
       auth_enabled: false
       storage:
@@ -31,9 +33,28 @@ spec:
         replication_factor: 1
       limits_config:
         retention_period: 7d
-    persistence:
-      enabled: true
-      size: 20Gi
-      storageClassName: ""
+      # Provide a schema_config required by the chart
+      schemaConfig:
+        configs:
+          - from: "2024-04-01"
+            store: tsdb
+            object_store: filesystem
+            schema: v13
+            index:
+              prefix: index_
+              period: 24h
+    singleBinary:
+      replicas: 1
+      persistence:
+        enabled: true
+        size: 20Gi
+        # StorageClass will be set via overlays per-cluster
     service:
       type: ClusterIP
+    # Ensure scalable targets are disabled in SingleBinary mode
+    write:
+      replicas: 0
+    read:
+      replicas: 0
+    backend:
+      replicas: 0
