@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: cloudflared
-          image: cloudflare/cloudflared:2026.1.1 # {"$imagepolicy": "flux-system:cloudflared"}
+          image: cloudflare/cloudflared:2026.1.2 # {"$imagepolicy": "flux-system:cloudflared"}
           imagePullPolicy: IfNotPresent
           args:
             - tunnel
