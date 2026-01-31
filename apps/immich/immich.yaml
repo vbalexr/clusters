@@ -1,22 +1,3 @@
-apiVersion: image.toolkit.fluxcd.io/v1
-kind: ImageRepository
-metadata:
-  name: immich
-spec:
-  image: ghcr.io/immich-app/immich-server
-  interval: 5m
----
-apiVersion: image.toolkit.fluxcd.io/v1
-kind: ImagePolicy
-metadata:
-  name: immich
-spec:
-  imageRepositoryRef:
-    name: immich
-  policy:
-    semver:
-      range: 2.x.x
----
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -37,7 +18,7 @@ spec:
         type: RollingUpdate
       containers:
       - name: immich
-        image: ghcr.io/immich-app/immich-server:v2.4.1 # {"$imagepolicy": "immich"}
+        image: ghcr.io/immich-app/immich-server:v2.4.1 # {"$imagepolicy": "flux-system:immich"}
         env:
         - name: DB_HOSTNAME
           valueFrom:

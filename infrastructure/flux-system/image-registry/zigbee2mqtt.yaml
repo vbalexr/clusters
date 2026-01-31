@@ -1,0 +1,20 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: zigbee2mqtt
+  namespace: flux-system
+spec:
+  image: koenkk/zigbee2mqtt
+  interval: 5m
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: zigbee2mqtt
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: zigbee2mqtt
+  policy:
+    semver:
+      range: ">=0.0.0"

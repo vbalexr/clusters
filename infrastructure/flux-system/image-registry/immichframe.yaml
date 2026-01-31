@@ -1,0 +1,23 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: immichframe
+  namespace: flux-system
+spec:
+  image: ghcr.io/immichframe/immichframe
+  interval: 5m
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: immichframe
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: immichframe
+  filterTags:
+    pattern: '^v?(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)\.(?P<rev>\d+)$'
+    extract: '$major.$minor.$patch-$rev'
+  policy:
+    semver:
+      range: ">=1.0.31-0"

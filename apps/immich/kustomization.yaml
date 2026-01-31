@@ -4,4 +4,3 @@ resources:
   - immich-ml.yaml
   - immich.yaml
   - service.yaml
-  - image-update-automation.yaml

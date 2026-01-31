@@ -22,4 +22,7 @@ resources:
   - kyverno/namespace.yaml
   - kyverno/repository.yaml
   - kyverno/release.yaml
+  - flux-system/helm-repositories
+  - flux-system/image-registry
+  - flux-system/image-automation
   

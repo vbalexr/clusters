@@ -1,22 +1,3 @@
-apiVersion: image.toolkit.fluxcd.io/v1
-kind: ImageRepository
-metadata:
-  name: mosquitto
-spec:
-  image: eclipse-mosquitto
-  interval: 5m
----
-apiVersion: image.toolkit.fluxcd.io/v1
-kind: ImagePolicy
-metadata:
-  name: mosquitto
-spec:
-  imageRepositoryRef:
-    name: mosquitto
-  policy:
-    semver:
-      range: ">=0.0.0"
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -37,7 +18,7 @@ spec:
         type: Recreate
       containers:
       - name: mosquitto
-        image: eclipse-mosquitto:2.0.22 # {"$imagepolicy": "mosquitto"}
+        image: eclipse-mosquitto:2.0.22 # {"$imagepolicy": "flux-system:mosquitto"}
         ports:
           - name: mqtt
             containerPort: 1883

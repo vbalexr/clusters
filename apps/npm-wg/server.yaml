@@ -1,41 +1,3 @@
-apiVersion: image.toolkit.fluxcd.io/v1
-kind: ImageRepository
-metadata:
-  name: npm-wg-wireguard
-spec:
-  image: lscr.io/linuxserver/wireguard
-  interval: 5m
----
-apiVersion: image.toolkit.fluxcd.io/v1
-kind: ImagePolicy
-metadata:
-  name: npm-wg-wireguard
-spec:
-  imageRepositoryRef:
-    name: npm-wg-wireguard
-  policy:
-    semver:
-      range: ">=0.0.0"
----
-apiVersion: image.toolkit.fluxcd.io/v1
-kind: ImageRepository
-metadata:
-  name: npm-wg-nginx-proxy-manager
-spec:
-  image: jc21/nginx-proxy-manager
-  interval: 5m
----
-apiVersion: image.toolkit.fluxcd.io/v1
-kind: ImagePolicy
-metadata:
-  name: npm-wg-nginx-proxy-manager
-spec:
-  imageRepositoryRef:
-    name: npm-wg-nginx-proxy-manager
-  policy:
-    semver:
-      range: ">=0.0.0"
----
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -73,7 +35,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: wireguard
-        image: lscr.io/linuxserver/wireguard:1.0.20250521 # {"$imagepolicy": "npm-wg-wireguard"}
+        image: lscr.io/linuxserver/wireguard:1.0.20250521 # {"$imagepolicy": "flux-system:npm-wg-wireguard"}
         securityContext:
           privileged: true
           capabilities:
@@ -106,7 +68,7 @@ spec:
           periodSeconds: 10
           timeoutSeconds: 5
       - name: nginx-proxy-manager
-        image: jc21/nginx-proxy-manager:2.13.6 # {"$imagepolicy": "npm-wg-nginx-proxy-manager"}
+        image: jc21/nginx-proxy-manager:2.13.6 # {"$imagepolicy": "flux-system:npm-wg-nginx-proxy-manager"}
         env:
           - name: DB_MYSQL_HOST
             valueFrom:

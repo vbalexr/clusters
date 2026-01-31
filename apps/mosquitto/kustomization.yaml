@@ -5,4 +5,3 @@ resources:
   - server.yaml
   - service.yaml
   - config-map.yaml
-  - image-update-automation.yaml

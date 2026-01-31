@@ -1,0 +1,41 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: npm-wg-wireguard
+  namespace: flux-system
+spec:
+  image: lscr.io/linuxserver/wireguard
+  interval: 5m
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: npm-wg-wireguard
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: npm-wg-wireguard
+  policy:
+    semver:
+      range: ">=0.0.0"
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: npm-wg-nginx-proxy-manager
+  namespace: flux-system
+spec:
+  image: jc21/nginx-proxy-manager
+  interval: 5m
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: npm-wg-nginx-proxy-manager
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: npm-wg-nginx-proxy-manager
+  policy:
+    semver:
+      range: ">=0.0.0"

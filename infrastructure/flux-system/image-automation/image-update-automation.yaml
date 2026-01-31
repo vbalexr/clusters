@@ -1,7 +1,8 @@
 apiVersion: image.toolkit.fluxcd.io/v1
 kind: ImageUpdateAutomation
 metadata:
-  name: homeassistant-automation
+  name: global-image-automation
+  namespace: flux-system
 spec:
   git:
     checkout:
@@ -11,7 +12,7 @@ spec:
       author:
         email: fluxcdbot@users.noreply.github.com
         name: fluxcdbot
-      messageTemplate: 'auto-update: update homeassistant to {{range .Changed.Changes}}{{.NewValue}}{{end}} from {{range .Changed.Changes}}{{.OldValue}}{{end}}'
+      messageTemplate: 'auto-update: {{range .Changed.Changes}}{{print .OldValue}} -> {{println .NewValue}}{{end}}'
     push:
       branch: main
   interval: 30m0s
@@ -20,5 +21,5 @@ spec:
     name: flux-system
     namespace: flux-system
   update:
-    path: ./apps/homeassistant
+    path: ./apps
     strategy: Setters

@@ -11,8 +11,8 @@ spec:
       version: "6.*"
       sourceRef:
         kind: HelmRepository
-        name: grafana-loki
-        namespace: monitoring
+        name: grafana
+        namespace: flux-system
   targetNamespace: monitoring
   install:
     createNamespace: true

@@ -1,22 +1,3 @@
-apiVersion: image.toolkit.fluxcd.io/v1
-kind: ImageRepository
-metadata:
-  name: frigate
-spec:
-  image: ghcr.io/blakeblackshear/frigate
-  interval: 5m
----
-apiVersion: image.toolkit.fluxcd.io/v1
-kind: ImagePolicy
-metadata:
-  name: frigate
-spec:
-  imageRepositoryRef:
-    name: frigate
-  policy:
-    semver:
-      range: ">=0.0.0"
----
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -36,7 +17,7 @@ spec:
     spec:
       containers:
       - name: frigate
-        image: ghcr.io/blakeblackshear/frigate:0.16.3 # {"$imagepolicy": "frigate"}
+        image: ghcr.io/blakeblackshear/frigate:0.16.3 # {"$imagepolicy": "flux-system:frigate"}
         securityContext:
           privileged: true
           runAsUser: 0
