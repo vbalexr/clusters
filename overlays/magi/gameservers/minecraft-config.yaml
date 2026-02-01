@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: minecraft-config
+type: Opaque
+stringData:
+    MODE: ENC[AES256_GCM,data:9dhhlbrQmaY=,iv:Lme956PN4n1PfWiM6cocc1kQ/dfTwzLytJwW7daJ/2k=,tag:A/3ut01i2xhKh0njWFDVog==,type:str]
+    DIFFICULTY: ENC[AES256_GCM,data:Bd0tli+yF4w=,iv:HHYOAVpThjNrkiD+ztIfknKJHgTUXL2DswGfHO4Z/Q4=,tag:2Aj0MD/W7j2MbC6y2uBNxg==,type:str]
+    OPS: ENC[AES256_GCM,data:ugiSONUMQQ==,iv:7N9JAx41QOy2z7wEugTvrXjjoKdZLWk0Ev+lYkBDiCs=,tag:4/elMaj9C/JJsadsetsh4Q==,type:str]
+    LEVEL_NAME: ENC[AES256_GCM,data:RIjY82hwtRJzAcob,iv:Zz87tdR0ZFYDaHNo5JYdhJvwRPwYq8Ku35rI/EkmX2k=,tag:XTwhXrqMmpz0cZbfcniTqg==,type:str]
+sops:
+    age:
+        - recipient: age1gfg2cjnueyul65k0sdd3x85t2n6tlnspmfe7g87xzjt6f86y2fas63kt3x
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBzSUU4ZWpXRmIyRVk4d0pa
+            ckdHQ2grRUI5V0d2eHVvN0FJRklGS1pZRVdFCm9Nd3h2NEpmN0pJRkxIdERXS3pX
+            dm95b2pWZzh5b0k2TXZSTlE2QWkzOGMKLS0tIGRRS1Y4M2ZURkdQWjcyTGtxMyt3
+            RkJnN1NsQTExc0VZNXRYUE9JMkRUK28KiUw+Q4nE9S01hn8xaOOvSxDaP0Xnk+4X
+            HP36z8cNu9bSaGVpusyVu4c8wjeGl4veMLRjoBe5Ipw05OwPVRpzXg==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2026-02-02T15:04:28Z"
+    mac: ENC[AES256_GCM,data:Co/R0FleHWk6MtnmWUoW549IwMwxHXBuuzYTXdY+73SMfgASDeLYZsudaYdtsFWVGisdv2XRvhm7zRo30lJrG16MjvDWL6EmSrd2q3UE7WJ2Sxwkl1GuPWPqfKcAf2gMHmNPcAzb0ACPXM017/CmSxnRWacjl5MB+KIngGtHNME=,iv:fdMJV2RKvjlvAWbteuBBmNoyhLXmLPWBzTHwwxO8wpc=,tag:w5QD1iJ3KsrCKMCSTyxVlg==,type:str]
+    encrypted_regex: ^(data|stringData)$
+    version: 3.11.0

@@ -8,3 +8,4 @@ resources:
   - app-micasa.yaml
   - app-mrakaki.yaml
   - app-monitoring.yaml
+  - app-gameservers.yaml

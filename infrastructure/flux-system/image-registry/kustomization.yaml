@@ -14,3 +14,4 @@ resources:
   - technitium.yaml
   - vaultwarden.yaml
   - zigbee2mqtt.yaml
+  - minecraft.yaml
