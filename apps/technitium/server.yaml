@@ -25,10 +25,10 @@ spec:
           - name: dns-udp
             containerPort: 53
             protocol: UDP
-          - name: admin
+          - name: admin-https
             containerPort: 53443
             protocol: TCP
-          - name: web
+          - name: admin-http
             containerPort: 5380
             protocol: TCP
           - name: dot-tcp

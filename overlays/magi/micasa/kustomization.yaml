@@ -44,3 +44,4 @@ patchesStrategicMerge:
   - patches/frigate-service.yaml
   
   - patches/technitium.yaml
+  - patches/technitium-service.yaml
