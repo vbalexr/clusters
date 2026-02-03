@@ -8,7 +8,9 @@ resources:
   - rook/storageclass-cephfs.yaml
   - rook/storageclass-rbd.yaml
 
-  - metallb/config.yaml
+  - metallb/peers.yaml
+  - metallb/pools.yaml
+  - metallb/advertisement.yaml
 
   - multus/cctv-net.yaml
   - multus/home-net.yaml

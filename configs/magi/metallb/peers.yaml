@@ -1,0 +1,23 @@
+apiVersion: metallb.io/v1beta2
+kind: BGPPeer
+metadata:
+  name: pfsense-v4
+  namespace: metallb
+spec:
+  myASN: 64513
+  peerASN: 64501
+  peerAddress: 10.1.0.1
+  holdTime: 90s
+  keepaliveTime: 30s
+---
+apiVersion: metallb.io/v1beta2
+kind: BGPPeer
+metadata:
+  name: pfsense-v6
+  namespace: metallb
+spec:
+  myASN: 64513
+  peerASN: 64501
+  peerAddress: fd7a:6e5b:cafe:10::1
+  holdTime: 90s
+  keepaliveTime: 30s
