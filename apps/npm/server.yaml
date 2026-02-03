@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: npm-wg
+  name: npm
 spec:
   selector:
     matchLabels:
-      app: npm-wg
-  serviceName: npm-wg
+      app: npm
+  serviceName: npm
   replicas: 1
   template:
     metadata:
       labels:
-        app: npm-wg
+        app: npm
     spec:
       initContainers:
       - name: init-nginx-custom
@@ -34,66 +34,33 @@ spec:
           mountPath: /config
       terminationGracePeriodSeconds: 10
       containers:
-      - name: wireguard
-        image: lscr.io/linuxserver/wireguard:1.0.20250521 # {"$imagepolicy": "flux-system:npm-wg-wireguard"}
-        securityContext:
-          privileged: true
-          capabilities:
-            add:
-              - NET_ADMIN
-              - SYS_MODULE
-        env:
-          - name: PUID
-            value: "1000"
-          - name: PGID
-            value: "1000"
-        volumeMounts:
-        - name: wg-secret
-          mountPath: /etc/wireguard/wg0.conf
-          subPath: wg0.conf
-        - name: tun-device
-          mountPath: /dev/net/tun
-        - name: modules
-          mountPath: /lib/modules
-        livenessProbe:
-          exec:
-            command: ["sh", "-c", "wg show || ip link show wg0"]
-          initialDelaySeconds: 20
-          periodSeconds: 10
-          timeoutSeconds: 5
-        readinessProbe:
-          exec:
-            command: ["sh", "-c", "wg show || ip link show wg0"]
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          timeoutSeconds: 5
       - name: nginx-proxy-manager
         image: jc21/nginx-proxy-manager:2.13.6 # {"$imagepolicy": "flux-system:npm-wg-nginx-proxy-manager"}
         env:
           - name: DB_MYSQL_HOST
             valueFrom:
               secretKeyRef:
-                name: npm-wg-secret
+                name: npm-secret
                 key: db-host
           - name: DB_MYSQL_PORT
             valueFrom:
               secretKeyRef:
-                name: npm-wg-secret
+                name: npm-secret
                 key: db-port
           - name: DB_MYSQL_NAME
             valueFrom:
               secretKeyRef:
-                name: npm-wg-secret
+                name: npm-secret
                 key: db-name
           - name: DB_MYSQL_USER
             valueFrom:
               secretKeyRef:
-                name: npm-wg-secret
+                name: npm-secret
                 key: db-user
           - name: DB_MYSQL_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: npm-wg-secret
+                name: npm-secret
                 key: db-password
         ports:
           - containerPort: 80
@@ -111,15 +78,9 @@ spec:
         - name: npm-ssl
           mountPath: /etc/letsencrypt
       volumes:
-      - name: wg-secret
-        secret:
-          secretName: npm-wg-secret
-          items:
-            - key: wg0.conf
-              path: wg0.conf
       - name: nginx-custom
         configMap:
-          name: npm-wg-nginx-custom
+          name: npm-nginx-custom
           items:
             - key: http.conf
               path: http.conf
@@ -129,14 +90,6 @@ spec:
               path: listen.conf
             - key: proxy.conf
               path: proxy.conf
-      - name: tun-device
-        hostPath:
-          path: /dev/net/tun
-          type: CharDevice
-      - name: modules
-        hostPath:
-          path: /lib/modules
-          type: Directory
   volumeClaimTemplates:
   - metadata:
       name: npm-data

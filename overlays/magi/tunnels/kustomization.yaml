@@ -3,9 +3,12 @@ kind: Kustomization
 namespace: tunnels
 resources:
   - namespace.yaml
+
   - secrets-cloudflared.yaml
-  - npm-wg-secret.yaml
   - ../../../apps/cloudflared
-  - ../../../apps/npm-wg
+
+  - npm-secret.yaml
+  - ../../../apps/npm
 patchesStrategicMerge:
-  - patches/npm-wg.yaml
+  - patches/npm.yaml
+  - patches/npm-service.yaml

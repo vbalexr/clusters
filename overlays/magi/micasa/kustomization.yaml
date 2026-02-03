@@ -3,17 +3,25 @@ kind: Kustomization
 namespace: micasa
 resources:
   - namespace.yaml
+  
+  - ../../../apps/homeassistant
+
+  - ../../../apps/zigbee2mqtt
+
+  - ../../../apps/mosquitto
+
   - immich-postgres-config.yaml
   - immich-redis-config.yaml
-  - vaultwarden-postgres-config.yaml
-  - ../../../apps/homeassistant
-  - ../../../apps/zigbee2mqtt
-  - ../../../apps/mosquitto
   - ../../../apps/immich
-  - ../../../apps/esphome
-  - ../../../apps/vaultwarden
   - ../../../apps/immichFrame
+
+  - ../../../apps/esphome
+
+  - vaultwarden-postgres-config.yaml
+  - ../../../apps/vaultwarden
+
   - ../../../apps/frigate
+
   - ../../../apps/technitium
 
 patchesStrategicMerge:

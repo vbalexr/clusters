@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - config-map.yaml
   - server.yaml
+  - service.yaml

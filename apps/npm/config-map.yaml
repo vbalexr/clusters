@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: npm-nginx-custom
+data:
+  http.conf: ""
+    
+  stream.conf: ""
+    
+  listen.conf: ""
+    
+  proxy.conf: |
+    client_max_body_size 0;
+    proxy_request_buffering off;
+    proxy_buffering off;

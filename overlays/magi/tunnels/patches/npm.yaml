@@ -1,12 +1,12 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: npm-wg
+  name: npm
 spec:
   template:
     metadata:
       labels:
-        app: npm-wg
+        app: npm
       annotations:
         k8s.v1.cni.cncf.io/networks: |
             [{
