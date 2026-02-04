@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: buyback
-        image: mrakaki/dev-containers:mrakaki-eve-buyback.0.0.2
+        image: mrakaki/dev-containers:mrakaki-eve-buyback.0.0.3
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: production

@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: universe
-        image: mrakaki/dev-containers:mrakaki-eve-universe.0.0.2
+        image: mrakaki/dev-containers:mrakaki-eve-universe.0.0.5
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: production
