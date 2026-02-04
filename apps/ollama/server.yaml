@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ollama
+  labels:
+    app: ollama
+spec:
+  serviceName: ollama
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ollama
+  template:
+    metadata:
+      labels:
+        app: ollama
+    spec:
+      containers:
+        - name: ollama
+          image: ollama/ollama:0.15.4 # {"$imagepolicy": "flux-system:ollama"}
+          ports:
+            - name: http
+              containerPort: 11434
+              protocol: TCP
+          env:
+            - name: OLLAMA_HOST
+              value: 0.0.0.0:11434
+          volumeMounts:
+            - name: ollama
+              mountPath: /root/.ollama
+          readinessProbe:
+            tcpSocket:
+              port: 11434
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            tcpSocket:
+              port: 11434
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 500m
+              memory: 4Gi
+            limits:
+              cpu: 4000m
+              memory: 12Gi
+  volumeClaimTemplates:
+    - metadata:
+        name: ollama
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 30Gi

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: llama-cpp-model
+data:
+  # Direct download URL for a GGUF model file.
+  # Set this to a HuggingFace "resolve" URL or any HTTPS URL reachable from the cluster.
+  MODEL_URL: ""
+
+  # File name to store under /models inside the PVC.
+  MODEL_FILENAME: model.gguf
+
+  # Runtime tuning. Start conservative and adjust.
+  CTX_SIZE: "8192"
+  N_GPU_LAYERS: "0"

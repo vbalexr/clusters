@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: ai
+resources:
+  - namespace.yaml
+  - ../../../apps/llama-cpp
+  - ../../../apps/open-webui
+patchesStrategicMerge:
+  - patches/llama-cpp-gpu.yaml
+  - patches/llama-cpp-model.yaml
+  - patches/llama-cpp-service.yaml
+  - patches/open-webui-storage.yaml

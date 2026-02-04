@@ -5,6 +5,7 @@ resources:
   - infra-configs.yaml
   - app-tunnels.yaml
   - app-databases.yaml
+  - app-ai.yaml
   - app-micasa.yaml
   - app-mrakaki.yaml
   - app-monitoring.yaml

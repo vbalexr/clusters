@@ -10,6 +10,8 @@ resources:
   - immichframe.yaml
   - mosquitto.yaml
   - npm-wg.yaml
+  - open-webui.yaml
+  - ollama.yaml
   - redis.yaml
   - technitium.yaml
   - vaultwarden.yaml

@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: llama-cpp
+spec:
+  template:
+    spec:
+      containers:
+        - name: llama-cpp
+          securityContext:
+            privileged: true
+            runAsUser: 0
+            runAsGroup: 0
+          env:
+            - name: SYCL_DEVICE_FILTER
+              value: level_zero:gpu
+            - name: ONEAPI_DEVICE_SELECTOR
+              value: level_zero:gpu
+          volumeMounts:
+            - name: dri
+              mountPath: /dev/dri
+          resources:
+            requests:
+              cpu: 1000m
+              memory: 10Gi
+            limits:
+              cpu: 6000m
+              memory: 20Gi
+      volumes:
+        - name: dri
+          hostPath:
+            path: /dev/dri
+            type: Directory
+  volumeClaimTemplates:
+    - metadata:
+        name: models
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 100Gi
+        storageClassName: rook-ceph-block
+

@@ -1,0 +1,121 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: llama-cpp
+  labels:
+    app: llama-cpp
+spec:
+  serviceName: llama-cpp-headless
+  replicas: 1
+  selector:
+    matchLabels:
+      app: llama-cpp
+    
+  template:
+    metadata:
+      labels:
+        app: llama-cpp
+    spec:
+      initContainers:
+        - name: download-model
+          image: curlimages/curl:8.6.0
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
+          env:
+            - name: MODEL_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: llama-cpp-model
+                  key: MODEL_URL
+            - name: MODEL_FILENAME
+              valueFrom:
+                configMapKeyRef:
+                  name: llama-cpp-model
+                  key: MODEL_FILENAME
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -eu
+              if [ -z "${MODEL_URL}" ]; then
+                echo "MODEL_URL is empty. Set it in the llama-cpp-model ConfigMap." >&2
+                exit 1
+              fi
+              mkdir -p /models
+              if [ -f "/models/${MODEL_FILENAME}" ]; then
+                echo "Model already exists: /models/${MODEL_FILENAME}"
+                exit 0
+              fi
+              echo "Downloading model to /models/${MODEL_FILENAME}"
+              curl -L --fail --retry 5 --retry-delay 2 \
+                -o "/models/${MODEL_FILENAME}.partial" \
+                "${MODEL_URL}"
+              mv "/models/${MODEL_FILENAME}.partial" "/models/${MODEL_FILENAME}"
+              echo "Done"
+          volumeMounts:
+            - name: models
+              mountPath: /models
+      containers:
+        - name: llama-cpp
+          image: ghcr.io/ggerganov/llama.cpp:server-intel-b4719
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: MODEL_FILENAME
+              valueFrom:
+                configMapKeyRef:
+                  name: llama-cpp-model
+                  key: MODEL_FILENAME
+            - name: CTX_SIZE
+              valueFrom:
+                configMapKeyRef:
+                  name: llama-cpp-model
+                  key: CTX_SIZE
+            - name: N_GPU_LAYERS
+              valueFrom:
+                configMapKeyRef:
+                  name: llama-cpp-model
+                  key: N_GPU_LAYERS
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -eu
+              exec /app/llama-server \
+                --host 0.0.0.0 \
+                --port 8080 \
+                --model "/models/${MODEL_FILENAME}" \
+                --ctx-size "${CTX_SIZE}" \
+                --n-gpu-layers "${N_GPU_LAYERS}"
+          volumeMounts:
+            - name: models
+              mountPath: /models
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 500m
+              memory: 4Gi
+  volumeClaimTemplates:
+    - metadata:
+        name: models
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 30Gi
+
