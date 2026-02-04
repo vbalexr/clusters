@@ -23,6 +23,10 @@ spec:
           runAsUser: 0
           runAsGroup: 0
           allowPrivilegeEscalation: true
+        resources:
+          requests:
+            cpu: 1
+            memory: "2Gi"
         ports:
         - name: https
           containerPort: 8971

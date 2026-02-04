@@ -58,3 +58,18 @@ spec:
       replicas: 0
     backend:
       replicas: 0
+
+    # Homelab-friendly: disable large in-memory caches.
+    # These pods typically show up as loki-chunks-cache / loki-results-cache and can reserve a lot of RAM.
+    chunksCache:
+      enabled: false
+    resultsCache:
+      enabled: false
+
+    # Back-compat for older chart value keys (safe if ignored by the chart).
+    memcachedChunks:
+      enabled: false
+    memcachedResults:
+      enabled: false
+    memcachedFrontend:
+      enabled: false
