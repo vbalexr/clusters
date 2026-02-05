@@ -17,16 +17,15 @@ spec:
       - name: init-nginx-custom
         image: busybox:1.36
         command:
-          - sh
-          - -c
-          - |
-            set -e
-            mkdir -p /data/nginx/custom
-            cp -f /config/http.conf /data/nginx/custom/http.conf
-            cp -f /config/stream.conf /data/nginx/custom/stream.conf
-            cp -f /config/listen.conf /data/nginx/custom/listen.conf
-            cp -f /config/proxy.conf /data/nginx/custom/proxy.conf
-
+        - sh
+        - -c
+        - |
+          set -e
+          mkdir -p /data/nginx/custom
+          cp -f /config/http.conf /data/nginx/custom/http.conf
+          cp -f /config/stream.conf /data/nginx/custom/stream.conf
+          cp -f /config/listen.conf /data/nginx/custom/listen.conf
+          cp -f /config/proxy.conf /data/nginx/custom/proxy.conf
         volumeMounts:
         - name: npm-data
           mountPath: /data
@@ -35,43 +34,43 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: nginx-proxy-manager
-        image: jc21/nginx-proxy-manager:2.13.6 # {"$imagepolicy": "flux-system:npm-wg-nginx-proxy-manager"}
+        image: jc21/nginx-proxy-manager:2.13.7 # {"$imagepolicy": "flux-system:npm-wg-nginx-proxy-manager"}
         env:
-          - name: DB_MYSQL_HOST
-            valueFrom:
-              secretKeyRef:
-                name: npm-secret
-                key: db-host
-          - name: DB_MYSQL_PORT
-            valueFrom:
-              secretKeyRef:
-                name: npm-secret
-                key: db-port
-          - name: DB_MYSQL_NAME
-            valueFrom:
-              secretKeyRef:
-                name: npm-secret
-                key: db-name
-          - name: DB_MYSQL_USER
-            valueFrom:
-              secretKeyRef:
-                name: npm-secret
-                key: db-user
-          - name: DB_MYSQL_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: npm-secret
-                key: db-password
+        - name: DB_MYSQL_HOST
+          valueFrom:
+            secretKeyRef:
+              name: npm-secret
+              key: db-host
+        - name: DB_MYSQL_PORT
+          valueFrom:
+            secretKeyRef:
+              name: npm-secret
+              key: db-port
+        - name: DB_MYSQL_NAME
+          valueFrom:
+            secretKeyRef:
+              name: npm-secret
+              key: db-name
+        - name: DB_MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: npm-secret
+              key: db-user
+        - name: DB_MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: npm-secret
+              key: db-password
         ports:
-          - containerPort: 80
-            name: http
-            protocol: TCP
-          - containerPort: 81
-            name: management
-            protocol: TCP
-          - containerPort: 443
-            name: https
-            protocol: TCP
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        - containerPort: 81
+          name: management
+          protocol: TCP
+        - containerPort: 443
+          name: https
+          protocol: TCP
         volumeMounts:
         - name: npm-data
           mountPath: /data
@@ -82,26 +81,26 @@ spec:
         configMap:
           name: npm-nginx-custom
           items:
-            - key: http.conf
-              path: http.conf
-            - key: stream.conf
-              path: stream.conf
-            - key: listen.conf
-              path: listen.conf
-            - key: proxy.conf
-              path: proxy.conf
+          - key: http.conf
+            path: http.conf
+          - key: stream.conf
+            path: stream.conf
+          - key: listen.conf
+            path: listen.conf
+          - key: proxy.conf
+            path: proxy.conf
   volumeClaimTemplates:
   - metadata:
       name: npm-data
     spec:
-      accessModes: [ "ReadWriteMany" ]
+      accessModes: ["ReadWriteMany"]
       resources:
         requests:
           storage: 10Gi
   - metadata:
       name: npm-ssl
     spec:
-      accessModes: [ "ReadWriteMany" ]
+      accessModes: ["ReadWriteMany"]
       resources:
         requests:
           storage: 2Gi
