@@ -18,7 +18,7 @@ spec:
         type: RollingUpdate
       containers:
       - name: immich
-        image: ghcr.io/immich-app/immich-server:v2.5.3 # {"$imagepolicy": "flux-system:immich"}
+        image: ghcr.io/immich-app/immich-server:v2.5.5 # {"$imagepolicy": "flux-system:immich"}
         env:
         - name: DB_HOSTNAME
           valueFrom:
