@@ -18,7 +18,7 @@ spec:
         type: RollingUpdate
       containers:
         - name: immich-ml
-          image: ghcr.io/immich-app/immich-machine-learning:v2.5.3 # {"$imagepolicy": "flux-system:immich-ml"}
+          image: ghcr.io/immich-app/immich-machine-learning:v2.5.5 # {"$imagepolicy": "flux-system:immich-ml"}
           env:
             - name: IMMICH_PORT
               value: "3003"
