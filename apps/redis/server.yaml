@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: redis
-          image: redis:8.4.0 # {"$imagepolicy": "flux-system:redis"}
+          image: redis:8.6.0 # {"$imagepolicy": "flux-system:redis"}
           ports:
             - name: http
               containerPort: 6379
@@ -27,15 +27,14 @@ spec:
           livenessProbe:
             exec:
               command:
-              - redis-cli
-              - ping
+                - redis-cli
+                - ping
             initialDelaySeconds: 5
             periodSeconds: 5
           readinessProbe:
             exec:
               command:
-              - redis-cli
-              - ping
+                - redis-cli
+                - ping
             initialDelaySeconds: 5
             periodSeconds: 5
-          
