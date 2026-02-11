@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: allianceauth-beat
+  labels:
+    app: allianceauth-beat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: allianceauth-beat
+  template:
+    metadata:
+      labels:
+        app: allianceauth-beat
+    spec:
+      containers:
+        - name: allianceauth
+          image: registry.gitlab.com/allianceauth/allianceauth/auth:v4.12.0 # {"$imagepolicy": "flux-system:allianceauth"}
+          command:
+            - sh
+            - -c
+          args:
+            - mkdir -p /home/allianceauth/log && pip install --upgrade -r /home/allianceauth/myauth/requirements.txt && exec celery -A myauth beat
+          envFrom:
+            - secretRef:
+                name: allianceauth-env
+                optional: true
+          volumeMounts:
+            - name: myauth-overrides
+              mountPath: /home/allianceauth/myauth/celery.py
+              subPath: celery.py
+              readOnly: true
+            - name: myauth-overrides
+              mountPath: /home/allianceauth/myauth/requirements.txt
+              subPath: requirements.txt
+              readOnly: true
+            - name: myauth-overrides
+              mountPath: /home/allianceauth/myauth/urls.py
+              subPath: urls.py
+              readOnly: true
+            - name: myauth-overrides
+              mountPath: /home/allianceauth/myauth/settings/base.py
+              subPath: base.py
+              readOnly: true
+            - name: myauth-overrides
+              mountPath: /home/allianceauth/myauth/settings/local.py
+              subPath: local.py
+              readOnly: true
+      volumes:
+        - name: myauth-overrides
+          configMap:
+            name: allianceauth-myauth-overrides
+            defaultMode: 0444

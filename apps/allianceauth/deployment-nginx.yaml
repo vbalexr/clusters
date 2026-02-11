@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: allianceauth-nginx
+  labels:
+    app: allianceauth-nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: allianceauth-nginx
+  template:
+    metadata:
+      labels:
+        app: allianceauth-nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.27-alpine
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+              readOnly: true
+            - name: static
+              mountPath: /var/www/myauth/static
+              readOnly: true
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: allianceauth-nginx
+            defaultMode: 0444
+        - name: static
+          persistentVolumeClaim:
+            claimName: allianceauth-static

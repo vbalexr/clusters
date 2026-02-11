@@ -1,0 +1,110 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: allianceauth-gunicorn
+  labels:
+    app: allianceauth-gunicorn
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: allianceauth-gunicorn
+  template:
+    metadata:
+      labels:
+        app: allianceauth-gunicorn
+    spec:
+      initContainers:
+        - name: init-allianceauth
+          image: registry.gitlab.com/allianceauth/allianceauth/auth:v4.12.0 # {"$imagepolicy": "flux-system:allianceauth"}
+          workingDir: /home/allianceauth/myauth/
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
+            allowPrivilegeEscalation: false
+          command:
+            - sh
+            - -c
+          args:
+            - >-
+              mkdir -p /var/www/myauth/static
+              && chmod -R a+rw /var/www/myauth/static
+              && pip install --upgrade -r /home/allianceauth/myauth/requirements.txt
+              && python /home/allianceauth/myauth/manage.py check
+              && python /home/allianceauth/myauth/manage.py migrate
+              && python /home/allianceauth/myauth/manage.py collectstatic --noinput
+          envFrom:
+            - secretRef:
+                name: allianceauth-env
+                optional: true
+          volumeMounts:
+            - name: myauth-overrides
+              mountPath: /home/allianceauth/myauth/requirements.txt
+              subPath: requirements.txt
+              readOnly: true
+            - name: myauth-overrides
+              mountPath: /home/allianceauth/myauth/myauth/urls.py
+              subPath: urls.py
+              readOnly: true
+            - name: myauth-overrides
+              mountPath: /home/allianceauth/myauth/myauth/settings/base.py
+              subPath: base.py
+              readOnly: true
+            - name: myauth-overrides
+              mountPath: /home/allianceauth/myauth/myauth/settings/local.py
+              subPath: local.py
+              readOnly: true
+            - name: static
+              mountPath: /var/www/myauth/static
+      containers:
+        - name: allianceauth
+          image: registry.gitlab.com/allianceauth/allianceauth/auth:v4.12.0 # {"$imagepolicy": "flux-system:allianceauth"}
+          workingDir: /home/allianceauth/myauth/
+          command:
+            - sh
+            - -c
+          args:
+            - pip install --upgrade -r /home/allianceauth/myauth/requirements.txt && exec gunicorn myauth.wsgi --bind=0.0.0.0:8000 --workers=3 --timeout=120 --max-requests=500 --max-requests-jitter=50
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          envFrom:
+            - secretRef:
+                name: allianceauth-env
+                optional: true
+          volumeMounts:
+            - name: myauth-overrides
+              mountPath: /home/allianceauth/myauth/myauth/celery.py,
+              subPath: celery.py
+              readOnly: true
+            - name: myauth-overrides
+              mountPath: /home/allianceauth/myauth/requirements.txt
+              subPath: requirements.txt
+              readOnly: true
+            - name: myauth-overrides
+              mountPath: /home/allianceauth/myauth/local.append.py
+              subPath: local.append.py
+              readOnly: true
+            - name: myauth-overrides
+              mountPath: /home/allianceauth/myauth/myauth/urls.py
+              subPath: urls.py
+              readOnly: true
+            - name: myauth-overrides
+              mountPath: /home/allianceauth/myauth/myauth/settings/base.py
+              subPath: base.py
+              readOnly: true
+            - name: myauth-overrides
+              mountPath: /home/allianceauth/myauth/myauth/settings/local.py
+              subPath: local.py
+              readOnly: true
+            - name: static
+              mountPath: /var/www/myauth/static
+      volumes:
+        - name: myauth-overrides
+          configMap:
+            name: allianceauth-myauth-overrides
+            defaultMode: 0444
+        - name: static
+          persistentVolumeClaim:
+            claimName: allianceauth-static

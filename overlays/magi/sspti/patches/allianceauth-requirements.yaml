@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: allianceauth-myauth-overrides
+data:
+  requirements.txt: |
+    aa_skip_email
+    django-eveuniverse
+    aa-structures
+    aa-srp
+    allianceauth-corptools
