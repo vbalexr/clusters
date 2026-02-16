@@ -15,7 +15,7 @@ spec:
       restartPolicy: OnFailure
       containers:
         - name: pull
-          image: ollama/ollama:0.16.1 # {"$imagepolicy": "flux-system:ollama"}
+          image: ollama/ollama:0.16.2 # {"$imagepolicy": "flux-system:ollama"}
           env:
             - name: OLLAMA_HOST
               value: http://ollama:11434
