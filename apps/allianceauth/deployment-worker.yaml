@@ -47,8 +47,13 @@ spec:
               mountPath: /home/allianceauth/myauth/settings/local.py
               subPath: local.py
               readOnly: true
+            - name: static
+              mountPath: /var/www/myauth/static
       volumes:
         - name: myauth-overrides
           configMap:
             name: allianceauth-myauth-overrides
             defaultMode: 0444
+        - name: static
+          persistentVolumeClaim:
+            claimName: allianceauth-static
