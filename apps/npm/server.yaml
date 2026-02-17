@@ -34,7 +34,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: nginx-proxy-manager
-        image: jc21/nginx-proxy-manager:2.13.7 # {"$imagepolicy": "flux-system:npm-wg-nginx-proxy-manager"}
+        image: jc21/nginx-proxy-manager:2.14.0 # {"$imagepolicy": "flux-system:npm-wg-nginx-proxy-manager"}
         env:
         - name: DB_MYSQL_HOST
           valueFrom:
