@@ -4,8 +4,11 @@ namespace: sspti
 resources:
   - namespace.yaml
   - allianceauth-env.yaml
+  - llmcord-config.yaml
   - ../../../apps/allianceauth
+  - ../../../apps/llmcord
 
 patchesStrategicMerge:
   - patches/allianceauth-storage.yaml
   - patches/allianceauth-requirements.yaml
+  - patches/llmcord-storage.yaml

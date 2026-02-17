@@ -3,12 +3,11 @@ kind: ConfigMap
 metadata:
   name: llama-cpp-model
 data:
-  # Qwen2.5-Coder 7B Instruct (GGUF, Q4_K_M). Fits comfortably under 20Gi RAM.
-  MODEL_URL: https://huggingface.co/bartowski/Qwen2.5-Coder-7B-Instruct-GGUF/resolve/main/Qwen2.5-Coder-7B-Instruct-Q4_K_M.gguf
-  MODEL_FILENAME: Qwen2.5-Coder-7B-Instruct-Q4_K_M.gguf
+  MODEL_URL: https://huggingface.co/lmstudio-community/Qwen2.5-14B-Instruct-GGUF/resolve/main/Qwen2.5-14B-Instruct-Q4_K_M.gguf?download=true
+  MODEL_FILENAME: Qwen2.5-14B-Instruct-Q4_K_M.gguf
 
   # Runtime tuning
-  CTX_SIZE: "4096"
+  CTX_SIZE: "8192"
 
   # Attempt to offload as many layers as possible to the Intel iGPU.
   # llama.cpp will clamp this to the model's layer count.

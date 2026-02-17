@@ -10,6 +10,18 @@ data:
   # File name to store under /models inside the PVC.
   MODEL_FILENAME: model.gguf
 
+  # Optional: multimodal projector file (mmproj) for vision-capable models.
+  # If MMPROJ_URL is set, the initContainer will download it to /models and
+  # llama-server will be started with: --mmproj /models/${MMPROJ_FILENAME}
+  MMPROJ_URL: ""
+  MMPROJ_FILENAME: ""
+
   # Runtime tuning. Start conservative and adjust.
   CTX_SIZE: "8192"
   N_GPU_LAYERS: "0"
+
+  # Sampling parameters
+  TEMPERATURE: "0.85"
+  TOP_P: "0.9"
+  TOP_K: "50"
+  REPEAT_PENALTY: "1.05"

@@ -1,0 +1,132 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: llmcord
+  labels:
+    app: llmcord
+spec:
+  serviceName: llmcord-headless
+  replicas: 1
+  updateStrategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: llmcord
+  template:
+    metadata:
+      labels:
+        app: llmcord
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+        fsGroupChangePolicy: OnRootMismatch
+      initContainers:
+        - name: init-llmcord
+          image: python:3.12-bookworm
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -eu
+              export DEBIAN_FRONTEND=noninteractive
+              apt-get update
+              apt-get install -y --no-install-recommends git ca-certificates
+              rm -rf /var/lib/apt/lists/*
+
+              mkdir -p /work
+              if [ ! -d /work/src/.git ]; then
+                rm -rf /work/src
+                git clone --depth=1 https://github.com/jakobdylanc/llmcord /work/src
+              else
+                cd /work/src
+                git fetch --prune
+                git pull --ff-only
+              fi
+
+              # Config is stored in a Secret; copy it onto the PVC so llmcord
+              # can read ./config.yaml from the repo working directory.
+              cp /config/config.yaml /work/src/config.yaml
+
+              python -m venv /work/venv
+              /work/venv/bin/python -m pip install -U pip
+
+              req_hash="$(sha256sum /work/src/requirements.txt | awk '{print $1}')"
+              py_ver="$(/work/venv/bin/python -c 'import sys; print("%d.%d" % sys.version_info[:2])')"
+              stamp="/work/.deps.${py_ver}.${req_hash}.ok"
+
+              if [ ! -f "$stamp" ]; then
+                /work/venv/bin/python -m pip install -U -r /work/src/requirements.txt
+                rm -f /work/.deps.*.ok
+                touch "$stamp"
+              else
+                echo "Dependencies unchanged; skipping pip install."
+              fi
+          volumeMounts:
+            - name: data
+              mountPath: /work
+            - name: config
+              mountPath: /config
+              readOnly: true
+          securityContext:
+            runAsNonRoot: false
+            runAsUser: 0
+            runAsGroup: 0
+            allowPrivilegeEscalation: false
+      containers:
+        - name: llmcord
+          image: python:3.12-bookworm
+          imagePullPolicy: IfNotPresent
+          workingDir: /work/src
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -eu
+              exec /work/venv/bin/python /work/src/llmcord.py
+          env:
+            - name: PYTHONDONTWRITEBYTECODE
+              value: "1"
+            - name: HOME
+              value: /tmp
+            - name: XDG_CACHE_HOME
+              value: /tmp
+          volumeMounts:
+            - name: data
+              mountPath: /work
+            - name: tmp
+              mountPath: /tmp
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+      volumes:
+        - name: config
+          secret:
+            secretName: llmcord-config
+        - name: tmp
+          emptyDir: {}
+
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+        labels:
+          app: llmcord
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi

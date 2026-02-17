@@ -33,6 +33,16 @@ spec:
                 configMapKeyRef:
                   name: llama-cpp-model
                   key: MODEL_FILENAME
+            - name: MMPROJ_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: llama-cpp-model
+                  key: MMPROJ_URL
+            - name: MMPROJ_FILENAME
+              valueFrom:
+                configMapKeyRef:
+                  name: llama-cpp-model
+                  key: MMPROJ_FILENAME
           command:
             - /bin/sh
             - -c
@@ -45,14 +55,31 @@ spec:
               mkdir -p /models
               if [ -f "/models/${MODEL_FILENAME}" ]; then
                 echo "Model already exists: /models/${MODEL_FILENAME}"
-                exit 0
+              else
+                echo "Downloading model to /models/${MODEL_FILENAME}"
+                curl -L --fail --retry 5 --retry-delay 2 \
+                  -o "/models/${MODEL_FILENAME}.partial" \
+                  "${MODEL_URL}"
+                mv "/models/${MODEL_FILENAME}.partial" "/models/${MODEL_FILENAME}"
+                echo "Done"
               fi
-              echo "Downloading model to /models/${MODEL_FILENAME}"
-              curl -L --fail --retry 5 --retry-delay 2 \
-                -o "/models/${MODEL_FILENAME}.partial" \
-                "${MODEL_URL}"
-              mv "/models/${MODEL_FILENAME}.partial" "/models/${MODEL_FILENAME}"
-              echo "Done"
+
+              if [ -n "${MMPROJ_URL}" ]; then
+                if [ -z "${MMPROJ_FILENAME}" ]; then
+                  echo "MMPROJ_URL is set but MMPROJ_FILENAME is empty. Set both in the llama-cpp-model ConfigMap." >&2
+                  exit 1
+                fi
+                if [ -f "/models/${MMPROJ_FILENAME}" ]; then
+                  echo "mmproj already exists: /models/${MMPROJ_FILENAME}"
+                else
+                  echo "Downloading mmproj to /models/${MMPROJ_FILENAME}"
+                  curl -L --fail --retry 5 --retry-delay 2 \
+                    -o "/models/${MMPROJ_FILENAME}.partial" \
+                    "${MMPROJ_URL}"
+                  mv "/models/${MMPROJ_FILENAME}.partial" "/models/${MMPROJ_FILENAME}"
+                  echo "Done"
+                fi
+              fi
           volumeMounts:
             - name: models
               mountPath: /models
@@ -69,6 +96,11 @@ spec:
                 configMapKeyRef:
                   name: llama-cpp-model
                   key: MODEL_FILENAME
+            - name: MMPROJ_FILENAME
+              valueFrom:
+                configMapKeyRef:
+                  name: llama-cpp-model
+                  key: MMPROJ_FILENAME
             - name: CTX_SIZE
               valueFrom:
                 configMapKeyRef:
@@ -79,17 +111,47 @@ spec:
                 configMapKeyRef:
                   name: llama-cpp-model
                   key: N_GPU_LAYERS
+            - name: TEMPERATURE
+              valueFrom:
+                configMapKeyRef:
+                  name: llama-cpp-model
+                  key: TEMPERATURE
+            - name: TOP_P
+              valueFrom:
+                configMapKeyRef:
+                  name: llama-cpp-model
+                  key: TOP_P
+            - name: TOP_K
+              valueFrom:
+                configMapKeyRef:
+                  name: llama-cpp-model
+                  key: TOP_K
+            - name: REPEAT_PENALTY
+              valueFrom:
+                configMapKeyRef:
+                  name: llama-cpp-model
+                  key: REPEAT_PENALTY
           command:
             - /bin/sh
             - -c
             - |
               set -eu
-              exec /app/llama-server \
+              set -- /app/llama-server \
                 --host 0.0.0.0 \
                 --port 8080 \
                 --model "/models/${MODEL_FILENAME}" \
                 --ctx-size "${CTX_SIZE}" \
-                --n-gpu-layers "${N_GPU_LAYERS}"
+                --n-gpu-layers "${N_GPU_LAYERS}" \
+                --temp "${TEMPERATURE}" \
+                --top-p "${TOP_P}" \
+                --top-k "${TOP_K}" \
+                --repeat-penalty "${REPEAT_PENALTY}"
+
+              if [ -n "${MMPROJ_FILENAME:-}" ] && [ -f "/models/${MMPROJ_FILENAME}" ]; then
+                set -- "$@" --mmproj "/models/${MMPROJ_FILENAME}"
+              fi
+
+              exec "$@"
           volumeMounts:
             - name: models
               mountPath: /models
