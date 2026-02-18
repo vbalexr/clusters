@@ -5,4 +5,6 @@ resources:
   - service.yaml
   - service-headless.yaml
   - model-config.yaml
+  - pvc-models.yaml
+  - job-download-model.yaml
 

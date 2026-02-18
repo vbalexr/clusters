@@ -1,0 +1,13 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: llama-cpp
+spec:
+  template:
+    spec:
+      containers:
+        - name: llama-cpp
+          resources:
+            requests:
+              cpu: "8"
+              memory: 16Gi

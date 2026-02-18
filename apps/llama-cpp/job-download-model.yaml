@@ -1,0 +1,87 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: llama-cpp-download-model
+  labels:
+    app: llama-cpp
+spec:
+  backoffLimit: 3
+  template:
+    metadata:
+      labels:
+        app: llama-cpp
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: download
+          image: curlimages/curl:8.6.0
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
+          env:
+            - name: MODEL_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: llama-cpp-model
+                  key: MODEL_URL
+            - name: MODEL_FILENAME
+              valueFrom:
+                configMapKeyRef:
+                  name: llama-cpp-model
+                  key: MODEL_FILENAME
+            - name: MMPROJ_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: llama-cpp-model
+                  key: MMPROJ_URL
+            - name: MMPROJ_FILENAME
+              valueFrom:
+                configMapKeyRef:
+                  name: llama-cpp-model
+                  key: MMPROJ_FILENAME
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -eu
+              if [ -z "${MODEL_URL}" ]; then
+                echo "MODEL_URL is empty. Set it in the llama-cpp-model ConfigMap." >&2
+                exit 1
+              fi
+
+              mkdir -p /models
+
+              if [ -f "/models/${MODEL_FILENAME}" ]; then
+                echo "Model already exists: /models/${MODEL_FILENAME}"
+              else
+                echo "Downloading model to /models/${MODEL_FILENAME}"
+                tmp="/models/${MODEL_FILENAME}.partial.$(date +%s)"
+                curl -L --fail --retry 5 --retry-delay 2 -o "${tmp}" "${MODEL_URL}"
+                mv "${tmp}" "/models/${MODEL_FILENAME}"
+                echo "Done"
+              fi
+
+              if [ -n "${MMPROJ_URL}" ]; then
+                if [ -z "${MMPROJ_FILENAME}" ]; then
+                  echo "MMPROJ_URL is set but MMPROJ_FILENAME is empty. Set both in the llama-cpp-model ConfigMap." >&2
+                  exit 1
+                fi
+                if [ -f "/models/${MMPROJ_FILENAME}" ]; then
+                  echo "mmproj already exists: /models/${MMPROJ_FILENAME}"
+                else
+                  echo "Downloading mmproj to /models/${MMPROJ_FILENAME}"
+                  tmp="/models/${MMPROJ_FILENAME}.partial.$(date +%s)"
+                  curl -L --fail --retry 5 --retry-delay 2 -o "${tmp}" "${MMPROJ_URL}"
+                  mv "${tmp}" "/models/${MMPROJ_FILENAME}"
+                  echo "Done"
+                fi
+              fi
+
+              echo "All requested artifacts present in /models"
+          volumeMounts:
+            - name: models
+              mountPath: /models
+      volumes:
+        - name: models
+          persistentVolumeClaim:
+            claimName: llama-cpp-models

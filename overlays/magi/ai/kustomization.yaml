@@ -6,7 +6,8 @@ resources:
   - ../../../apps/llama-cpp
   - ../../../apps/open-webui
 patchesStrategicMerge:
-  - patches/llama-cpp-gpu.yaml
+  - patches/llama-cpp-storage.yaml
   - patches/llama-cpp-model.yaml
   - patches/llama-cpp-service.yaml
+  - patches/llama-cpp-resources.yaml
   - patches/open-webui-storage.yaml

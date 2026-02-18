@@ -16,76 +16,9 @@ spec:
       labels:
         app: llama-cpp
     spec:
-      initContainers:
-        - name: download-model
-          image: curlimages/curl:8.6.0
-          securityContext:
-            runAsUser: 0
-            runAsGroup: 0
-          env:
-            - name: MODEL_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: llama-cpp-model
-                  key: MODEL_URL
-            - name: MODEL_FILENAME
-              valueFrom:
-                configMapKeyRef:
-                  name: llama-cpp-model
-                  key: MODEL_FILENAME
-            - name: MMPROJ_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: llama-cpp-model
-                  key: MMPROJ_URL
-            - name: MMPROJ_FILENAME
-              valueFrom:
-                configMapKeyRef:
-                  name: llama-cpp-model
-                  key: MMPROJ_FILENAME
-          command:
-            - /bin/sh
-            - -c
-            - |
-              set -eu
-              if [ -z "${MODEL_URL}" ]; then
-                echo "MODEL_URL is empty. Set it in the llama-cpp-model ConfigMap." >&2
-                exit 1
-              fi
-              mkdir -p /models
-              if [ -f "/models/${MODEL_FILENAME}" ]; then
-                echo "Model already exists: /models/${MODEL_FILENAME}"
-              else
-                echo "Downloading model to /models/${MODEL_FILENAME}"
-                curl -L --fail --retry 5 --retry-delay 2 \
-                  -o "/models/${MODEL_FILENAME}.partial" \
-                  "${MODEL_URL}"
-                mv "/models/${MODEL_FILENAME}.partial" "/models/${MODEL_FILENAME}"
-                echo "Done"
-              fi
-
-              if [ -n "${MMPROJ_URL}" ]; then
-                if [ -z "${MMPROJ_FILENAME}" ]; then
-                  echo "MMPROJ_URL is set but MMPROJ_FILENAME is empty. Set both in the llama-cpp-model ConfigMap." >&2
-                  exit 1
-                fi
-                if [ -f "/models/${MMPROJ_FILENAME}" ]; then
-                  echo "mmproj already exists: /models/${MMPROJ_FILENAME}"
-                else
-                  echo "Downloading mmproj to /models/${MMPROJ_FILENAME}"
-                  curl -L --fail --retry 5 --retry-delay 2 \
-                    -o "/models/${MMPROJ_FILENAME}.partial" \
-                    "${MMPROJ_URL}"
-                  mv "/models/${MMPROJ_FILENAME}.partial" "/models/${MMPROJ_FILENAME}"
-                  echo "Done"
-                fi
-              fi
-          volumeMounts:
-            - name: models
-              mountPath: /models
       containers:
         - name: llama-cpp
-          image: ghcr.io/ggerganov/llama.cpp:server-intel-b4719
+          image: ghcr.io/ggml-org/llama.cpp:server
           ports:
             - name: http
               containerPort: 8080
@@ -131,6 +64,16 @@ spec:
                 configMapKeyRef:
                   name: llama-cpp-model
                   key: REPEAT_PENALTY
+            - name: BATCH_SIZE
+              valueFrom:
+                configMapKeyRef:
+                  name: llama-cpp-model
+                  key: BATCH_SIZE
+            - name: PARALLEL
+              valueFrom:
+                configMapKeyRef:
+                  name: llama-cpp-model
+                  key: PARALLEL
           command:
             - /bin/sh
             - -c
@@ -141,6 +84,8 @@ spec:
                 --port 8080 \
                 --model "/models/${MODEL_FILENAME}" \
                 --ctx-size "${CTX_SIZE}" \
+                --batch-size "${BATCH_SIZE}" \
+                --parallel "${PARALLEL}" \
                 --n-gpu-layers "${N_GPU_LAYERS}" \
                 --temp "${TEMPERATURE}" \
                 --top-p "${TOP_P}" \
@@ -155,6 +100,7 @@ spec:
           volumeMounts:
             - name: models
               mountPath: /models
+              readOnly: true
           readinessProbe:
             httpGet:
               path: /health
@@ -171,13 +117,8 @@ spec:
             requests:
               cpu: 500m
               memory: 4Gi
-  volumeClaimTemplates:
-    - metadata:
-        name: models
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        resources:
-          requests:
-            storage: 30Gi
+      volumes:
+        - name: models
+          persistentVolumeClaim:
+            claimName: llama-cpp-models
 
