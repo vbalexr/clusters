@@ -1,0 +1,23 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: skynet
+  namespace: flux-system
+spec:
+  image: ghcr.io/mrakaki/sspti-skynet
+  interval: 1m0s
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: skynet
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: skynet
+  filterTags:
+    pattern: "^20[0-9]{6}-[0-9]{4}$"
+    extract: "$0"
+  policy:
+    numeric:
+      order: desc

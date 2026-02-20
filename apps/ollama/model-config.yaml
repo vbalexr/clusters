@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: ollama-model
-data:
-  # Good coding model that generally fits 16GB RAM with quantization.
-  CODING_MODEL: qwen2.5-coder:7b-instruct
