@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: allianceauth
-          image: registry.gitlab.com/allianceauth/allianceauth/auth:v4.12.0 # {"$imagepolicy": "flux-system:allianceauth"}
+          image: registry.gitlab.com/allianceauth/allianceauth/auth:v4.13.0 # {"$imagepolicy": "flux-system:allianceauth"}
           command:
             - sh
             - -c
