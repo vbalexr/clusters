@@ -27,28 +27,9 @@ spec:
                 name: allianceauth-env
                 optional: true
           volumeMounts:
-            - name: myauth-overrides
-              mountPath: /home/allianceauth/myauth/celery.py
-              subPath: celery.py
-              readOnly: true
-            - name: myauth-overrides
-              mountPath: /home/allianceauth/myauth/requirements.txt
-              subPath: requirements.txt
-              readOnly: true
-            - name: myauth-overrides
-              mountPath: /home/allianceauth/myauth/urls.py
-              subPath: urls.py
-              readOnly: true
-            - name: myauth-overrides
-              mountPath: /home/allianceauth/myauth/settings/base.py
-              subPath: base.py
-              readOnly: true
-            - name: myauth-overrides
-              mountPath: /home/allianceauth/myauth/settings/local.py
-              subPath: local.py
-              readOnly: true
+            - name: config
+              mountPath: /home/allianceauth/myauth
       volumes:
-        - name: myauth-overrides
-          configMap:
-            name: allianceauth-myauth-overrides
-            defaultMode: 0444
+        - name: config
+          persistentVolumeClaim:
+            claimName: config

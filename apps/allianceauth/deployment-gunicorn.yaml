@@ -33,22 +33,8 @@ spec:
                 name: allianceauth-env
                 optional: true
           volumeMounts:
-            - name: myauth-overrides
-              mountPath: /home/allianceauth/myauth/requirements.txt
-              subPath: requirements.txt
-              readOnly: true
-            - name: myauth-overrides
-              mountPath: /home/allianceauth/myauth/myauth/urls.py
-              subPath: urls.py
-              readOnly: true
-            - name: myauth-overrides
-              mountPath: /home/allianceauth/myauth/myauth/settings/base.py
-              subPath: base.py
-              readOnly: true
-            - name: myauth-overrides
-              mountPath: /home/allianceauth/myauth/myauth/settings/local.py
-              subPath: local.py
-              readOnly: true
+            - name: config
+              mountPath:  /home/allianceauth/myauth
             - name: static
               mountPath: /var/www/myauth/static
       containers:
@@ -69,37 +55,14 @@ spec:
                 name: allianceauth-env
                 optional: true
           volumeMounts:
-            - name: myauth-overrides
-              mountPath: /home/allianceauth/myauth/myauth/celery.py,
-              subPath: celery.py
-              readOnly: true
-            - name: myauth-overrides
-              mountPath: /home/allianceauth/myauth/requirements.txt
-              subPath: requirements.txt
-              readOnly: true
-            - name: myauth-overrides
-              mountPath: /home/allianceauth/myauth/local.append.py
-              subPath: local.append.py
-              readOnly: true
-            - name: myauth-overrides
-              mountPath: /home/allianceauth/myauth/myauth/urls.py
-              subPath: urls.py
-              readOnly: true
-            - name: myauth-overrides
-              mountPath: /home/allianceauth/myauth/myauth/settings/base.py
-              subPath: base.py
-              readOnly: true
-            - name: myauth-overrides
-              mountPath: /home/allianceauth/myauth/myauth/settings/local.py
-              subPath: local.py
-              readOnly: true
+            - name: config
+              mountPath:  /home/allianceauth/myauth
             - name: static
               mountPath: /var/www/myauth/static
       volumes:
-        - name: myauth-overrides
-          configMap:
-            name: allianceauth-myauth-overrides
-            defaultMode: 0444
+        - name: config
+          persistentVolumeClaim:
+            claimName: config
         - name: static
           persistentVolumeClaim:
             claimName: allianceauth-static
