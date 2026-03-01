@@ -4,3 +4,11 @@ metadata:
   name: allianceauth-static
 spec:
   storageClassName: rook-cephfs
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: allianceauth-config
+spec:
+  storageClassName: rook-cephfs

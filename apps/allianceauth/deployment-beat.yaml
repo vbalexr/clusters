@@ -16,6 +16,7 @@ spec:
     spec:
       containers:
         - name: allianceauth
+          workingDir: /home/allianceauth/myauth
           image: registry.gitlab.com/allianceauth/allianceauth/auth:v4.13.0 # {"$imagepolicy": "flux-system:allianceauth"}
           command:
             - sh
@@ -32,4 +33,4 @@ spec:
       volumes:
         - name: config
           persistentVolumeClaim:
-            claimName: config
+            claimName: allianceauth-config

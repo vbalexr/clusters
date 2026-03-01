@@ -8,12 +8,11 @@ spec:
   resources:
     requests:
       storage: 5Gi
-
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: config
+  name: allianceauth-config
 spec:
   accessModes:
     - ReadWriteMany
