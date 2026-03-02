@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: immichframe
-          image: ghcr.io/immichframe/immichframe:v1.0.31.0 # {"$imagepolicy": "flux-system:immichframe"}
+          image: ghcr.io/immichframe/immichframe:v1.0.32.0 # {"$imagepolicy": "flux-system:immichframe"}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
