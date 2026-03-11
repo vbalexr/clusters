@@ -1,15 +1,14 @@
 cilium install \
-    --set ipv4.enabled=true \
-    --set ipv6.enabled=true \
+    --version 1.19.1 \
+    --set kubeProxyReplacement=true \
     --set k8sServiceHost=magi.vbalex.com \
     --set k8sServicePort=6443 \
-    --set devices=enp2s0f0np0 \
-    --set routingMode=native \
-    --set autoDirectNodeRoutes=true \
-    --set ipv4NativeRoutingCIDR=10.42.0.0/16 \
-    --set ipv6NativeRoutingCIDR=fd7a:6e5b:42::/56 \
-    --set bgpControlPlane.enabled=true \
-    --set cni.exclusive=false \
+    --set ipv4.enabled=true \
+    --set ipv6.enabled=true \
     --set ipam.mode=kubernetes \
-    --set k8s.requireIPv4PodCIDR=true \
-    --set k8s.requireIPv6PodCIDR=true
+    --set cni.exclusive=false \
+    --set bgpControlPlane.enabled=true \
+    --set cni.binPath=/var/lib/rancher/k3s/data/cni/ \
+    --set cni.confPath=/var/lib/rancher/k3s/agent/etc/cni/net.d
+
+cilium status --wait

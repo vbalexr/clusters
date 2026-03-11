@@ -1,0 +1,21 @@
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: longhorn-storage
+  namespace: longhorn-system
+spec:
+  config: '{
+      "cniVersion": "1.0.0",
+      "type": "bridge",
+      "bridge": "br0",
+      "promiscMode": true,
+      "ipam": {
+        "type": "whereabouts",
+        "range": "172.16.128.0/24",
+        "exclude": [
+           "172.16.128.0/25"
+        ],
+        "routes": [{ "dst": "172.16.128.0/24" }],
+        "configuration_path": "/var/lib/rancher/k3s/agent/etc/cni/net.d/whereabouts.d/whereabouts.conf"
+      }
+    }'

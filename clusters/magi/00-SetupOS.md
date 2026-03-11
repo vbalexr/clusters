@@ -6,11 +6,21 @@ network:
   ethernets:
     enp87s0: {}
     enp90s0: {}
+    # for services comunication, do not have interneth access
     enp2s0f0np0:
       addresses:
         - 10.255.0.X/24
         - "fd7a:cafe::X/64"
     enp2s0f1np1: {}
+  bridges:
+    br0:
+      interfaces:
+        - enp2s0f1np1
+      addresses:
+        - 172.16.128.X/24
+      parameters:
+        stp: false
+        forward-delay: 0
   bonds:
     bond0:
       interfaces:
@@ -43,3 +53,86 @@ network:
       id: 25
       link: bond0
 ```
+
+baltasar
+
+/etc/keepalived/keepalived.conf
+
+
+vrrp_instance VI_1 {
+    state MASTER
+    interface enp2s0f0np0
+    virtual_router_id 41
+    priority 200
+    advert_int 1
+    virtual_ipaddress {
+        10.255.0.5/24
+    }
+}
+vrrp_instance VI_2 {
+    state MASTER
+    interface bond0
+    virtual_router_id 42
+    priority 200
+    advert_int 1
+    virtual_ipaddress {
+        10.1.0.5/24
+    }
+}
+sudo systemctl restart keepalived
+
+Casper
+
+
+/etc/keepalived/keepalived.conf
+
+
+vrrp_instance VI_1 {
+    state BACKUP
+    interface enp2s0f0np0
+    virtual_router_id 41
+    priority 100
+    advert_int 1
+    virtual_ipaddress {
+        10.255.0.5/24
+    }
+}
+vrrp_instance VI_2 {
+    state BACKUP
+    interface bond0
+    virtual_router_id 42
+    priority 100
+    advert_int 1
+    virtual_ipaddress {
+        10.1.0.5/24
+    }
+}
+sudo systemctl restart keepalived
+
+melchior
+
+
+/etc/keepalived/keepalived.conf
+
+
+vrrp_instance VI_1 {
+    state BACKUP
+    interface enp2s0f0np0
+    virtual_router_id 41
+    priority 50
+    advert_int 1
+    virtual_ipaddress {
+        10.255.0.5/24
+    }
+}
+vrrp_instance VI_2 {
+    state BACKUP
+    interface bond0
+    virtual_router_id 42
+    priority 50
+    advert_int 1
+    virtual_ipaddress {
+        10.1.0.5/24
+    }
+}
+sudo systemctl restart keepalived
