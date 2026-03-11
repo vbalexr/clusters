@@ -1,0 +1,15 @@
+cilium install \
+    --set ipv4.enabled=true \
+    --set ipv6.enabled=true \
+    --set k8sServiceHost=magi.vbalex.com \
+    --set k8sServicePort=6443 \
+    --set devices=enp2s0f0np0 \
+    --set routingMode=native \
+    --set autoDirectNodeRoutes=true \
+    --set ipv4NativeRoutingCIDR=10.42.0.0/16 \
+    --set ipv6NativeRoutingCIDR=fd7a:6e5b:42::/56 \
+    --set bgpControlPlane.enabled=true \
+    --set cni.exclusive=false \
+    --set ipam.mode=kubernetes \
+    --set k8s.requireIPv4PodCIDR=true \
+    --set k8s.requireIPv6PodCIDR=true
