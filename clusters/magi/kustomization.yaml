@@ -7,3 +7,4 @@ resources:
 - ns-databases.yaml
 - ns-sspti.yaml
 - ns-tunnels.yaml
+- ns-mrakaki.yaml
