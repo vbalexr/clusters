@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: skynet-corp-config
+data:
+  corpConfig.json: |
+    {
+      "discord": {
+        "channels": {
+          "pvp": "1173296178100711494",
+          "suspicious-packages": "1176276088389914715",
+          "recruiting": "1173294162901213194",
+          "buyback":"1173295848034144307",
+          "industry":"1173295760385786008",
+          "mining": "1173295515362938960",
+          "pve":"1174235700221181973"
+        },
+        "roles": {
+          "director": "1173678776668926044",
+          "recruitingOfficer": "1173542125141512224",
+          "srpManager":"1415729478247780412",
+          "fleetCommander":"1175432045602820187",
+          "miningOfficer":"1212172339236708392"
+        },
+        "users": {
+          "MrAkaki": "242175471721119744",
+          "Kathrine Natinde": "328619793714249728"
+        },
+        "recruiters": {
+          "MrAkaki": "242175471721119744",
+          "Kathrine Natinde": "328619793714249728"
+        }
+      }
+    }
+

@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homeassistant
+  labels:
+    app: homeassistant
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: homeassistant
+  template:
+    metadata:
+      labels:
+        app: homeassistant
+    spec:
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+      containers:
+      - name: homeassistant
+        image: ghcr.io/home-assistant/home-assistant:2026.2.3 # {"$imagepolicy": "flux-system:home-assistant"}
+        securityContext:
+          capabilities:
+            add:
+            - CHOWN
+            - SETUID
+            - SETGID
+            - DAC_OVERRIDE
+            drop:
+            - ALL
+        ports:
+        - name: http
+          containerPort: 8123
+        volumeMounts:
+        - mountPath: /config
+          name: config
+        - mountPath: /media
+          name: media
+        resources:
+          requests:
+            cpu: 300m
+            memory: 512Mi
+          limits:
+            cpu: 500m
+            memory: 1G
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: homeassistant-config
+      - name: media
+        persistentVolumeClaim:
+          claimName: homeassistant-media

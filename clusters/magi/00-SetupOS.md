@@ -12,15 +12,7 @@ network:
         - 10.255.0.X/24
         - "fd7a:cafe::X/64"
     enp2s0f1np1: {}
-  bridges:
-    br0:
-      interfaces:
-        - enp2s0f1np1
-      addresses:
-        - 172.16.128.X/24
-      parameters:
-        stp: false
-        forward-delay: 0
+  
   bonds:
     bond0:
       interfaces:
@@ -52,6 +44,17 @@ network:
     bond0.25:
       id: 25
       link: bond0
+  bridges:
+    br0:
+      interfaces:
+        - enp2s0f1np1
+      addresses:
+        - 172.16.128.X/24
+      parameters:
+        stp: true
+        forward-delay: 4
+        
+        
 ```
 
 baltasar

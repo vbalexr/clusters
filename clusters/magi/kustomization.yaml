@@ -8,3 +8,4 @@ resources:
 - ns-sspti.yaml
 - ns-tunnels.yaml
 - ns-mrakaki.yaml
+- ns-home.yaml

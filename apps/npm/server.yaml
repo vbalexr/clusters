@@ -1,0 +1,106 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: npm
+spec:
+  selector:
+    matchLabels:
+      app: npm
+  serviceName: npm
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: npm
+    spec:
+      initContainers:
+      - name: init-nginx-custom
+        image: busybox:1.36
+        command:
+        - sh
+        - -c
+        - |
+          set -e
+          mkdir -p /data/nginx/custom
+          cp -f /config/http.conf /data/nginx/custom/http.conf
+          cp -f /config/stream.conf /data/nginx/custom/stream.conf
+          cp -f /config/listen.conf /data/nginx/custom/listen.conf
+          cp -f /config/proxy.conf /data/nginx/custom/proxy.conf
+        volumeMounts:
+        - name: npm-data
+          mountPath: /data
+        - name: nginx-custom
+          mountPath: /config
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: nginx-proxy-manager
+        image: jc21/nginx-proxy-manager:2.14.0 # {"$imagepolicy": "flux-system:npm-wg-nginx-proxy-manager"}
+        env:
+        - name: DB_MYSQL_HOST
+          valueFrom:
+            secretKeyRef:
+              name: npm-secret
+              key: db-host
+        - name: DB_MYSQL_PORT
+          valueFrom:
+            secretKeyRef:
+              name: npm-secret
+              key: db-port
+        - name: DB_MYSQL_NAME
+          valueFrom:
+            secretKeyRef:
+              name: npm-secret
+              key: db-name
+        - name: DB_MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: npm-secret
+              key: db-user
+        - name: DB_MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: npm-secret
+              key: db-password
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        - containerPort: 81
+          name: management
+          protocol: TCP
+        - containerPort: 443
+          name: https
+          protocol: TCP
+        volumeMounts:
+        - name: npm-data
+          mountPath: /data
+        - name: npm-ssl
+          mountPath: /etc/letsencrypt
+      volumes:
+      - name: nginx-custom
+        configMap:
+          name: npm-nginx-custom
+          items:
+          - key: http.conf
+            path: http.conf
+          - key: stream.conf
+            path: stream.conf
+          - key: listen.conf
+            path: listen.conf
+          - key: proxy.conf
+            path: proxy.conf
+  volumeClaimTemplates:
+  - metadata:
+      name: npm-data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 10Gi
+  - metadata:
+      name: npm-ssl
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 2Gi

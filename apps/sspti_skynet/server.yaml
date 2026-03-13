@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: skynet
+  labels:
+    app: skynet
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: skynet
+  template:
+    metadata:
+      labels:
+        app: skynet
+    spec:
+      volumes:
+        - name: corp-config
+          configMap:
+            name: skynet-corp-config
+            items:
+              - key: corpConfig.json
+                path: corpConfig.json
+      containers:
+        - name: skynet
+          image: ghcr.io/mrakaki/sspti-skynet:202602200601 # {"$imagepolicy": "flux-system:skynet"}
+          envFrom:
+            - secretRef:
+                name: skynet-env-secret
+          volumeMounts:
+            - name: corp-config
+              mountPath: /app/corpConfig.json
+              subPath: corpConfig.json
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "500m"

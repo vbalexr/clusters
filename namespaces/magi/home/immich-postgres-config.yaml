@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: immich-postgres-config
+type: Opaque
+stringData:
+    host: ENC[AES256_GCM,data:7rVHlzGbLRnZEFQJsjOo1460VGNVuYXj+MWaMVdx2+xrnAKe,iv:m+Qo5jj/bKRJ/OpD4UyFSXfHcf37IfgR2/o4VfBoeDA=,tag://WFug0Sa/XEco0rogUrLg==,type:str]
+    port: ENC[AES256_GCM,data:SxhI5A==,iv:ryJf1kqcyNgZkNqXvq/rL9I8IVwUDJVtM2DXxqpRrfo=,tag:dXHpxO8CLVX5RjuGzhafbg==,type:str]
+    user: ENC[AES256_GCM,data:cBvloykB,iv:sHcqvVWs0paHce7QeP1gPepKuxVAEuQg1HM9QFlW0ck=,tag:uoQoYbv6jKX7na5etPvVlA==,type:str]
+    password: ENC[AES256_GCM,data:LMtenP/ch00kXpNC,iv:/YR4ZPcF2I/+bXsRmeNXcXiSz3bCKkHpwVyND4oqe/w=,tag:fBSIKgNvuzSIQjUWJsfqEQ==,type:str]
+sops:
+    age:
+        - recipient: age1fqgnfywtrv0v0v05xph328e90fk63vwsmz3qhra8zljdfsqn3fgquup54j
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBnd0sxODBDS2thUzlkQm9Q
+            aitXdU1EZE9jV2pDT0phZGpydEJqS00xNUg0CmRqNUlPU1lQODl2M0N1cjhTNXJS
+            NllVU3lncEI4cHhNYjVqUzljeDVPZ0UKLS0tIHRUUjJtN3p0NVJQaHdzWWl0NTBM
+            a1FRU1orWEo2THR0OTUrQzJkWjVFdzQKrtx6s1GT9mPM/0tjEIDR9+SgFonMOFEy
+            pgnFOXAygT6pRmoUwifxcSenKOu0CCI5uX8sX/ckMd9MfjF8CV2ViA==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2026-03-12T21:06:46Z"
+    mac: ENC[AES256_GCM,data:po1kj8sNKD1vQ8hVmU+tmojwBlrpvZRleYINyM97utfXzwc53nwzUK3vLF2r8OkPqPp849ZmgVQ9alzorg4gBsMHO8j5QEhnhEE52babkL4JG3c/oj9GL5L7rF3aBuffgZ89BpMTqebYGcZxMdhAJCAwTYzqjikx8u8XjSP6MKc=,iv:eX79lN2c7uHskP+SUGfQLowfvr5fP7dzNq8HIOsTsUM=,tag:uDlaGzMOxC9yU87EK/jm6A==,type:str]
+    encrypted_regex: ^(data|stringData)$
+    version: 3.12.1

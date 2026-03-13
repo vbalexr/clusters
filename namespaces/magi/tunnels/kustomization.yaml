@@ -6,3 +6,9 @@ resources:
 
   - secrets-cloudflared.yaml
   - ../../../apps/cloudflared
+
+  - npm-mariadb-secrets.yaml
+  - ../../../apps/npm
+
+patches:
+  - path: patches/npm.yaml
