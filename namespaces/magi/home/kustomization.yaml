@@ -7,16 +7,9 @@ resources:
   - immich-redis-config.yaml
   
   - ../../../apps/frigate 
-  - ../../../apps/mosquitto
-  - ../../../apps/zigbee2mqtt
   - ../../../apps/immich
-  - ../../../apps/esphome
-  - ../../../apps/homeassistant
-
+  
 patches:
   - path: patches/frigate.yaml
-  - path: patches/mosquitto.yaml
-  - path: patches/zigbee2mqtt.yaml
   - path: patches/immich.yaml
-  - path: patches/esphome.yaml
-  - path: patches/homeassistant.yaml
+  

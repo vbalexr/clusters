@@ -4,4 +4,3 @@ namespace: sspti
 resources:
   - namespace.yaml
   - allianceauth-env.yaml
-  - ../../../apps/allianceauth
